@@ -1,0 +1,14 @@
+{
+  "name": "sqlite-web-template",
+  "version": "1.0.0",
+  "description": "SQLite database web template with CRUD API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.0",
+    "sqlite3": "^6.0.1"
+  }
+}
