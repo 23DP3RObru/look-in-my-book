@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Web Template</title>
+  <title>Book Management</title>
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -25,9 +25,7 @@
     }
 
     header h1 { font-size: 1.3rem; font-weight: 600; }
-    .api-status {
-      font-size: .85rem; color: #95a5a6;
-    }
+    .api-status { font-size: .85rem; color: #95a5a6; }
     .status-ok   { color: #27ae60; font-weight: bold; }
     .status-err  { color: #e74c3c; font-weight: bold; }
 
@@ -53,26 +51,16 @@
 
     .toolbar button:hover { background: #f0f0f0; }
 
-    .btn-add {
-      background: #27ae60; color: #fff; border: none; font-weight: 500;
-    }
+    .btn-add { background: #27ae60; color: #fff; border: none; font-weight: 500; }
     .btn-add:hover { background: #2ecc71; }
 
-    .btn-danger {
-      background: #e74c3c; color: #fff; border: none; font-weight: 500;
-    }
+    .btn-danger { background: #e74c3c; color: #fff; border: none; font-weight: 500; }
     .btn-danger:hover { background: #c0392b; }
 
-    .btn-edit {
-      background: #3498db; color: #fff; border: none; font-weight: 500;
-    }
+    .btn-edit { background: #3498db; color: #fff; border: none; font-weight: 500; }
     .btn-edit:hover { background: #2980b9; }
 
-    .search-input {
-      padding: 6px 12px;
-      font-size: .85rem;
-      width: 160px;
-    }
+    .search-input { padding: 6px 12px; font-size: .85rem; width: 220px; }
 
     .table-wrapper {
       overflow-x: auto;
@@ -82,11 +70,7 @@
       box-shadow: 0 1px 3px rgba(0,0,0,.1);
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: .9rem;
-    }
+    table { width: 100%; border-collapse: collapse; font-size: .9rem; }
 
     thead th {
       text-align: left;
@@ -97,11 +81,7 @@
       position: sticky; top: 0;
     }
 
-    tbody td {
-      padding: 9px 12px;
-      border-bottom: 1px solid #eee;
-    }
-
+    tbody td { padding: 9px 12px; border-bottom: 1px solid #eee; }
     tbody tr:hover td { background: #f8f9fa; }
 
     .modal-overlay {
@@ -119,72 +99,52 @@
     }
 
     .modal h2 { margin-bottom: 16px; color: #2c3e50; }
-
-    .form-group {
-      margin-bottom: 12px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: .85rem;
-      color: #555;
-      margin-bottom: 4px;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: .85rem; color: #555; margin-bottom: 4px; }
+    .form-group input, .form-group select, .form-group textarea {
       width: 100%; padding: 6px 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: .9rem;
+      border: 1px solid #ccc; border-radius: 4px; font-size: .9rem;
     }
 
     .modal-actions {
-      display: flex; gap: 8px; justify-content: flex-end;
-      margin-top: 16px;
+      display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;
     }
 
     .btn-cancel { background: #95a5a6; color: #fff; border: none; padding: 6px 14px; cursor: pointer; }
     .btn-cancel:hover { opacity: .8; }
 
-    /* ── Toast / Flash Messages ── */
     .flash {
       position: fixed; top: 72px; left: 50%;
       transform: translateX(-50%);
       padding: 10px 24px; border-radius: 4px;
-      color: #fff; font-weight: 600;
-      font-size: .85rem; z-index: 200;
+      color: #fff; font-weight: 600; font-size: .85rem; z-index: 200;
       opacity: 0; transition: opacity .3s; pointer-events: none;
     }
     .flash.show { opacity: 1; }
     .flash-success { background: #27ae60; }
     .flash-error   { background: #e74c3c; }
 
-    .empty-state {
-      text-align: center; padding: 48px 20px;
-      color: #95a5a6; font-size: 1rem;
-    }
+    .empty-state { text-align: center; padding: 48px 20px; color: #95a5a6; font-size: 1rem; }
   </style>
 </head>
 
 <body>
 
 <header>
-  <h1>Web Template</h1>
+  <h1>Book Management System</h1>
   <span class="api-status" id="apiStatus">● Connecting …</span>
 </header>
 
 <div class="toolbar">
-  <input type="text" class="search-input" id="searchInput" placeholder="Search name / email …" autocomplete="off">
+  <input type="text" class="search-input" id="searchInput" placeholder="Search title / author …" autocomplete="off">
   <select id="filterSelect">
-    <option value="">All</option>
-    <option value="active">Active Only</option>
-    <option value="inactive">Inactive Only</option>
+    <option value="">All Genres</option>
+    <option value="Classic">Classic</option>
+    <option value="Dystopian">Dystopian</option>
+    <option value="Fantasy">Fantasy</option>
   </select>
-  <button class="btn-add" onclick="openModal('add')">➕ Add New</button>
+  <button class="btn-add" onclick="openModal('add')">➕ Add Book</button>
 </div>
-
 
 <div class="table-wrapper">
   <table id="dataTable">
@@ -197,70 +157,58 @@
 
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
-    <h2 id="modalTitle">Add User</h2>
-    <form id="userForm" onsubmit="handleSubmit(event)">
-      <!-- Filled dynamically by JS -->
+    <h2 id="modalTitle">Add Book</h2>
+    <form id="bookForm" onsubmit="handleSubmit(event)">
+      <!-- Rendered dynamically -->
     </form>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-add" id="modalSubmitBtn">Save</button>
+      <button class="btn-add" id="modalSubmitBtn" type="button" onclick="document.getElementById('bookForm').requestSubmit()">Save</button>
     </div>
   </div>
 </div>
 
-
 <div class="flash" id="flash"></div>
 
-<!-- ════════════ JAVASCRIPT — API CLIENT ════════════ -->
 <script>
-
-const API_BASE = 'http://localhost:3000/api/users';
-
+// Relative path prevents port mismatches
+const API_BASE = '/api/books';
 
 let currentFilter = '';
 let searchQuery   = '';
 let editingId     = null;
+let currentBooks  = [];
 
-const COLUMNS = ['id', 'name', 'email', 'age', 'city', 'active', 'created_at'];
+const COLUMNS = ['gramata_id', 'nosaukums', 'autors', 'lapas_kopa', 'zanrs', 'atsauksmes_atskaites'];
 
-/* ────────────────────────────────────────────────
-   INITIALIZATION
-   ──────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   initTableHeaders();
-  loadUsers();
+  loadBooks();
   setupEventListeners();
 });
 
-/* ────────────────────────────────────────────────
-   TABLE HEADER — built dynamically from columns
-   ──────────────────────────────────────────────── */
 function initTableHeaders() {
   const thead = document.getElementById('tableHead');
+  thead.innerHTML = '';
   COLUMNS.forEach((col, i) => {
-    if (['created_at', 'active'].includes(col)) return; // hide these from header
-
     const th = document.createElement('th');
     th.textContent = col.replace(/_/g, ' ').toUpperCase();
-
-    // Make columns sortable by ID
-    if (col === 'id') {
+    if (col === 'gramata_id') {
       th.style.cursor = 'pointer';
       th.onclick = () => sortTable(i);
     }
-
     thead.appendChild(th);
   });
+  const thAction = document.createElement('th');
+  thAction.textContent = 'ACTIONS';
+  thead.appendChild(thAction);
 }
 
-/* ────────────────────────────────────────────────
-   FETCH HELPERS — all API calls go through here
-   ──────────────────────────────────────────────── */
 async function apiGet(params = {}) {
   const url = new URL(API_BASE, window.location.origin);
-  Object.entries(params).forEach(([k, v]) => { if (v !== undefined) url.searchParams.set(k, v); });
+  Object.entries(params).forEach(([k, v]) => { if (v) url.searchParams.set(k, v); });
   const res = await fetch(url.toString());
-  if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}:${res.statusText}`);
   return res.json();
 }
 
@@ -268,7 +216,7 @@ async function apiPost(data) {
   const res = await fetch(API_BASE, {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
   });
-  if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}:${res.statusText}`);
   return res.json();
 }
 
@@ -276,31 +224,28 @@ async function apiPut(id, data) {
   const res = await fetch(`${API_BASE}/${id}`, {
     method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
   });
-  if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}:${res.statusText}`);
   return res.json();
 }
 
 async function apiDelete(id) {
   const res = await fetch(`${API_BASE}/${id}`, { method: 'DELETE' });
-  if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}:${res.statusText}`);
   return res.json();
 }
 
-/* ────────────────────────────────────────────────
-   LOAD USERS — fetch + render table
-   ──────────────────────────────────────────────── */
-async function loadUsers() {
+async function loadBooks() {
   const statusEl = document.getElementById('apiStatus');
   statusEl.innerHTML = '● Fetching …';
   statusEl.className = 'api-status';
 
   try {
-    const rows = await apiGet({ filter: currentFilter, search: searchQuery });
+    currentBooks = await apiGet({ genre: currentFilter, search: searchQuery });
 
-    if (rows.length === 0) {
+    if (currentBooks.length === 0) {
       showEmptyState();
     } else {
-      renderTable(rows);
+      renderTable(currentBooks);
     }
 
     updateApiStatus('OK');
@@ -312,126 +257,56 @@ async function loadUsers() {
 
 function showEmptyState() {
   const body = document.getElementById('tableBody');
-  body.innerHTML = `<tr><td colspan="${COLUMNS.length}" class="empty-state">No records found.</td></tr>`;
+  body.innerHTML = `<tr><td colspan="${COLUMNS.length + 1}" class="empty-state">No records found.</td></tr>`;
 }
 
-/* ────────────────────────────────────────────────
-   RENDER TABLE — populate tbody from array of rows
-   ──────────────────────────────────────────────── */
-/* ──────────────────────────────────────── */
-/* RENDER TABLE (buttons now below each row)/* ──────────────────────────────────────── */
 function renderTable(rows) {
   const tbody = document.getElementById('tableBody');
   tbody.innerHTML = '';
 
   rows.forEach(row => {
-    // 1. Data Row (values only)
-    const dataTr = document.createElement('tr');
-    COLUMNS.forEach((col, i) => {
-      if (['created_at', 'active'].includes(col)) return;
+    const tr = document.createElement('tr');
+    COLUMNS.forEach(col => {
       const td = document.createElement('td');
       td.textContent = row[col] ?? '';
-      td.style.width = 'auto';
-      dataTr.appendChild(td);
+      tr.appendChild(td);
     });
-    tbody.appendChild(dataTr);
 
-    // 2. Actions Row (buttons below each data row)
-    const actionsTr = document.createElement('tr');
-    const wrapper = document.createElement('td');
-    wrapper.style.gridColumn = '1 / -1';
-    wrapper.dataset.rowId = row.id; // Tag for DOM lookup
-    wrapper.style.padding = '8px 12px';
-    wrapper.style.background = '#f0f4f8';
-    wrapper.style.borderRadius = '4px';
+    const actionTd = document.createElement('td');
+    actionTd.appendChild(buildEditBtn(row.gramata_id));
+    actionTd.appendChild(buildDeleteBtn(row.gramata_id));
+    tr.appendChild(actionTd);
 
-    const editBtn = buildEditBtn(row.id);
-    const delBtn  = buildDeleteBtn(row.id);
-    wrapper.appendChild(editBtn);
-    wrapper.appendChild(delBtn);
-
-    actionsTr.appendChild(wrapper);
-    tbody.appendChild(actionsTr);
+    tbody.appendChild(tr);
   });
 }
 
-
-/* ────────────────────────────────────────────────
-   SORT TABLE — by column index on click
-   ──────────────────────────────────────────────── */
-let sortColIndex = -1;
-let sortAscending = true;
-
-function sortTable(colIndex) {
-  if (sortColIndex === colIndex) {
-    sortAscending = !sortAscending;
-  } else {
-    sortColIndex = colIndex;
-    sortAscending = true;
-  }
-  const rows = getTableRows(); // re-fetch with no filter to sort all
-  rows.sort((a, b) => {
-    let valA = a[colIndex], valB = b[colIndex];
-    if (typeof valA === 'string') { valA = valA.toLowerCase(); valB = valB.toLowerCase(); }
-    if (valA < valB) return sortAscending ? -1 : 1;
-    if (valA > valB) return sortAscending ?  1 : -1;
-    return 0;
-  });
-  renderTable(rows);
-}
-
-/* ────────────────────────────────────────────────
-   TOAST NOTIFICATIONS
-   ──────────────────────────────────────────────── */
-function showToast(message, type = 'success') {
-  const flash = document.getElementById('flash');
-  flash.textContent = message;
-  flash.className = `flash ${type} show`;
-  setTimeout(() => { flash.classList.remove('show'); }, 3000);
-}
-
-function updateApiStatus(state, detail = '') {
-  const el = document.getElementById('apiStatus');
-  if (state === 'OK')   { el.innerHTML = '● Ready';          el.className = 'api-status status-ok'; }
-  else if (state === 'ERR'){ el.innerHTML = `✕ ${detail}`; el.className = 'api-status status-err'; }
-  else                 { el.innerHTML = '○ Connecting …';    el.className = 'api-status'; }
-}
-
-/* ────────────────────────────────────────────────
-   FILTER / SEARCH EVENT LISTENERS
-   ──────────────────────────────────────────────── */
 function setupEventListeners() {
   document.getElementById('searchInput').addEventListener('input', (e) => {
     searchQuery = e.target.value;
-    loadUsers();
+    loadBooks();
   });
 
   document.getElementById('filterSelect').addEventListener('change', (e) => {
     currentFilter = e.target.value;
-    loadUsers();
+    loadBooks();
   });
 }
 
-/* ────────────────────────────────────────────────
-   MODAL — open / close / fill form
-   ──────────────────────────────────────────────── */
 function openModal(mode, id = null) {
   const overlay = document.getElementById('modalOverlay');
   const title   = document.getElementById('modalTitle');
-  const form    = document.getElementById('userForm');
 
   if (mode === 'edit') {
-    editingId = id; // Store ID directly from the button click
-    title.textContent = '✎ Edit User';
-    form.innerHTML = '';
-    renderFormFields(id); // Pass ID to prefill form
+    editingId = id;
+    title.textContent = '✎ Edit Book';
+    renderFormFields(id);
     document.getElementById('modalSubmitBtn').textContent = 'Update';
   } else {
     editingId = null;
-    title.textContent = '➕ Add New';
-    form.innerHTML = '';
+    title.textContent = '➕ Add New Book';
     renderFormFields(null);
-    document.getElementById('modalSubmitBtn').textContent = 'Add User';
+    document.getElementById('modalSubmitBtn').textContent = 'Add Book';
   }
 
   overlay.classList.add('active');
@@ -442,57 +317,36 @@ function closeModal() {
   document.getElementById('modalOverlay').classList.remove('active');
 }
 
-
-// Close modal on outside click
 document.getElementById('modalOverlay').addEventListener('click', (e) => {
   if (e.target === e.currentTarget) closeModal();
 });
 
-/* ────────────────────────────────────────────────
-   FILL FORM — render inputs inside the modal
-   ──────────────────────────────────────────────── */
-function getRowDataFromDOM(id) {
-  if (!id) return null;
-  const tr = document.querySelector(`#tableBody td[data-row-id="${id}"]`);
-  if (!tr) return null;
-  
-  const cells = Array.from(tr.parentElement.querySelectorAll('td')); // parent is the data row
-  const map = {};
-  cells.forEach((cell, i) => {
-    if (COLUMNS[i] && cell) map[COLUMNS[i]] = cell.textContent.trim();
-  });
-  return map;
-}
+function renderFormFields(id) {
+  const form = document.getElementById('bookForm');
+  const book = currentBooks.find(b => b.gramata_id === id) || {};
 
-   function renderFormFields(id) {
-  const form = document.getElementById('userForm');
-  let html = '';
-  const row = getRowDataFromDOM(id);
-
-  html += `<div class="form-group"><label for="f-name">Name *</label><input type="text" id="f-name" name="name" value="${row ? escapeHtml(row.name || '') : ''}" required></div>`;
-  html += `<div class="form-group"><label for="f-email">Email *</label><input type="email" id="f-email" name="email" value="${row ? escapeHtml(row.email || '') : ''}" required></div>`;
-  html += `<div class="form-group"><label for="f-age">Age</label><input type="number" id="f-age" name="age" value="${row ? (row.age ?? '') : ''}" min="0"></div>`;
-  html += `<div class="form-group"><label for="f-city">City</label><input type="text" id="f-city" name="city" value="${row ? (row.city || '') : ''}"></div>`;
-  html += `<div class="form-group"><label><input type="checkbox" id="f-active" name="active" ${id && row && (row.active === 1 ? 'checked' : '')} ></span> Active</label></div>`;
-
-  form.innerHTML = html;
-  
-  // ✅ CRITICAL FIX: Re-attach the submit handler after innerHTML replacement
-  form.addEventListener('submit', handleSubmit); 
-}
-
-
-
-function rowsById(id) {
-  const tr = document.querySelector(`#tableBody tr[data-row-id="${id}"]`);
-  if (!tr) return null;
-  const cells = Array.from(tr.querySelectorAll('td'));
-  const map   = {};
-  cells.forEach((cell, i) => {
-    const colName = COLUMNS[i];
-    if (colName && cell) map[colName] = cell.textContent;
-  });
-  return map;
+  form.innerHTML = `
+    <div class="form-group">
+      <label for="f-nosaukums">Title (Nosaukums) *</label>
+      <input type="text" id="f-nosaukums" name="nosaukums" value="${escapeHtml(book.nosaukums || '')}" required>
+    </div>
+    <div class="form-group">
+      <label for="f-autors">Author (Autors) *</label>
+      <input type="text" id="f-autors" name="autors" value="${escapeHtml(book.autors || '')}" required>
+    </div>
+    <div class="form-group">
+      <label for="f-lapas_kopa">Total Pages (Lapas Kopā)</label>
+      <input type="number" id="f-lapas_kopa" name="lapas_kopa" value="${book.lapas_kopa ?? ''}" min="0">
+    </div>
+    <div class="form-group">
+      <label for="f-zanrs">Genre (Žanrs)</label>
+      <input type="text" id="f-zanrs" name="zanrs" value="${escapeHtml(book.zanrs || '')}">
+    </div>
+    <div class="form-group">
+      <label for="f-atsauksmes">Rating (Atsauksmes)</label>
+      <input type="number" step="0.1" id="f-atsauksmes" name="atsauksmes_atskaites" value="${book.atsauksmes_atskaites ?? ''}" min="0" max="5">
+    </div>
+  `;
 }
 
 function escapeHtml(str) {
@@ -501,70 +355,56 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-/* ────────────────────────────────────────────────
-   FORM SUBMIT — POST or PUT depending on mode
-   ──────────────────────────────────────────────── */
 async function handleSubmit(e) {
   e.preventDefault();
 
-  const form     = document.getElementById('userForm');
+  const form      = document.getElementById('bookForm');
   const submitBtn = document.getElementById('modalSubmitBtn');
-  const statusEl = document.getElementById('apiStatus');
-  const isEdit   = editingId !== null;
+  const isEdit    = editingId !== null;
 
-  // Gather values
-  const name    = form.querySelector('#f-name').value.trim();
-  const email   = form.querySelector('#f-email').value.trim();
-  const age     = parseInt(form.querySelector('#f-age').value, 10) || 0;
-  const city    = form.querySelector('#f-city').value.trim();
-  const active  = form.querySelector('#f-active').checked ? 1 : 0;
+  const nosaukums            = form.querySelector('#f-nosaukums').value.trim();
+  const autors               = form.querySelector('#f-autors').value.trim();
+  const lapas_kopa           = parseInt(form.querySelector('#f-lapas_kopa').value, 10) || 0;
+  const zanrs                = form.querySelector('#f-zanrs').value.trim();
+  const atsauksmes_atskaites = parseFloat(form.querySelector('#f-atsauksmes').value) || 0;
 
-  if (!name || !email) {
-    showToast('Name and email are required.', 'error');
+  if (!nosaukums || !autors) {
+    showToast('Title and Author are required.', 'error');
     return;
   }
 
-  // Disable button during request
   submitBtn.disabled = true;
-  submitBtn.textContent = isEdit ? 'Saving …' : 'Adding …';
-  statusEl.innerHTML = `● ${isEdit ? 'Updating' : 'Creating'} …`;
 
   try {
+    const payload = { nosaukums, autors, lapas_kopa, zanrs, atsauksmes_atskaites };
     if (isEdit) {
-      const payload = { name, email, age, city, active };
       await apiPut(editingId, payload);
-      showToast('User updated successfully.', 'success');
+      showToast('Book updated successfully.', 'success');
     } else {
-      const payload = { name, email, age, city, active: 1 };
       await apiPost(payload);
-      showToast('User added successfully.', 'success');
+      showToast('Book added successfully.', 'success');
     }
 
     closeModal();
-    loadUsers(); // refresh table
+    loadBooks();
   } catch (err) {
     showToast(err.message, 'error');
   } finally {
     submitBtn.disabled = false;
-    if (!isEdit) submitBtn.textContent = 'Add User';
-    else       submitBtn.textContent = 'Update';
   }
 }
 
-/* ────────────────────────────────────────────────
-   DELETE BUTTONS — shown on each row
-   ──────────────────────────────────────────────── */
 function buildDeleteBtn(id) {
   const btn = document.createElement('button');
   btn.className = 'btn-danger';
   btn.textContent = '🗑️ Delete';
-  btn.style.display = 'inline-block; padding: 4px 8px; margin-right: 6px; font-size: .75rem; cursor: pointer; vertical-align: middle; border-radius: 3px;';
+  btn.style.cssText = 'padding: 4px 8px; margin-right: 6px; font-size: .75rem; cursor: pointer; border-radius: 3px;';
   btn.addEventListener('click', async () => {
-    if (!confirm(`Delete user #${id}? This cannot be undone.`)) return;
+    if (!confirm(`Delete book #${id}? This cannot be undone.`)) return;
     try {
       await apiDelete(id);
-      showToast('User deleted.', 'success');
-      loadUsers();
+      showToast('Book deleted.', 'success');
+      loadBooks();
     } catch (err) {
       showToast(err.message, 'error');
     }
@@ -572,19 +412,28 @@ function buildDeleteBtn(id) {
   return btn;
 }
 
-/* ────────────────────────────────────────────────
-   EDIT BUTTONS — shown on each row
-   ──────────────────────────────────────────────── */
 function buildEditBtn(id) {
   const btn = document.createElement('button');
   btn.className = 'btn-edit';
   btn.textContent = '✎ Edit';
-  btn.style.display = 'inline-block; padding: 4px 8px; margin-right: 6px; font-size: .75rem; cursor: pointer; vertical-align: middle; border-radius: 3px;';
-  // Pass ID directly to the modal handler
+  btn.style.cssText = 'padding: 4px 8px; margin-right: 6px; font-size: .75rem; cursor: pointer; border-radius: 3px;';
   btn.addEventListener('click', () => openModal('edit', id));
   return btn;
 }
 
+function showToast(message, type = 'success') {
+  const flash = document.getElementById('flash');
+  flash.textContent = message;
+  flash.className = `flash flash-${type} show`;
+  setTimeout(() => { flash.classList.remove('show'); }, 1000);
+}
+
+function updateApiStatus(state, detail = '') {
+  const el = document.getElementById('apiStatus');
+  if (state === 'OK')    { el.innerHTML = '● Ready';          el.className = 'api-status status-ok'; }
+  else if (state === 'ERR'){ el.innerHTML = `✕ ${detail}`; el.className = 'api-status status-err'; }
+  else                  { el.innerHTML = '○ Connecting …';    el.className = 'api-status'; }
+}
 </script>
 
 </body>
