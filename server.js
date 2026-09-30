@@ -1,3 +1,6 @@
+
+// SĀC SERVERI AR 'node server.js' KOMANDU TERMINĀLĪ
+
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
