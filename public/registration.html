@@ -50,15 +50,27 @@
 
                 const first_name = ducument.getElementById("first_name").value;
 
+                const last_name = document.getElementById("last_name").value;
+
+                const email = document.getElementById("email").value;
+
+                const password = document.getElementById("password").value;
+
+                const rep_password = document.getElementById("rep_password").value;
+
                 const response = await fetch("http://localhost:1000/api/users", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    first_name: first_name
-                })
-            });
+                    },
+                    body: JSON.stringify({
+                        first_name: first_name,
+                        last_name: last_name,
+                        email: email,
+                        password: password,
+                        rep_password: rep_password
+                    })
+                });
 
     const data = await response.json();
 
