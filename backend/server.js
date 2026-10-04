@@ -6,7 +6,7 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 1000;
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'frontend')));
 app.use(cors());
 app.use(express.json());
 
@@ -134,7 +134,7 @@ initDatabase();
    STATIC ROUTE FALLBACK
    ────────────────────────────────────────────── */
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
 });
 
 /* ──────────────────────────────────────────────
