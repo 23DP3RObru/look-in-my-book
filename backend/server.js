@@ -21,7 +21,8 @@ function initDatabase() {
     db.run(`
       CREATE TABLE IF NOT EXISTS lietotajs (
         lietotajs_id  INTEGER PRIMARY KEY AUTOINCREMENT,
-        lietotajvards TEXT NOT NULL UNIQUE,
+        vards TEXT NOT NULL,
+        uzvards TEXT NOT NULL,
         epasts        TEXT NOT NULL UNIQUE,
         parole_hash   TEXT NOT NULL,
         loma          TEXT CHECK(loma IN ('user', 'admin')) DEFAULT 'user',
