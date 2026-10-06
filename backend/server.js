@@ -27,8 +27,7 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 24
   }
 }));
-
-const db = new sqlite3.Database(':memory:');
+const db = new sqlite3.Database('./data/app.db');
 
 // Enable foreign key support in SQLite
 db.run('PRAGMA foreign_keys = ON;');
