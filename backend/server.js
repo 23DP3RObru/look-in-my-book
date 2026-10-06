@@ -2,18 +2,30 @@ const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
 const path = require('path');
+const session = require('express-session');
+const usersRouter = require('./routes/users');
 
 const app = express();
 const PORT = process.env.PORT || 1000;
 
-app.use(express.static(path.join(__dirname, 'frontend')));
+app.use(express.static(path.join(__dirname, '../frontend')));
 app.use(cors());
 app.use(express.json());
 
-const db = new sqlite3.Database(':memory:');
+// Configure session middleware
+app.use(session({
+  secret: 'your-secret-key-change-in-production',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { maxAge: 1000 * 60 * 60 * 24 } // 24 hours
+}));
+const db = new sqlite3.Database('./data/app.db');
 
 // Enable foreign key support in SQLite
 db.run('PRAGMA foreign_keys = ON;');
+
+// Make db available to routes
+app.set('db', db);
 
 function initDatabase() {
   db.serialize(() => {
@@ -135,8 +147,13 @@ initDatabase();
    STATIC ROUTE FALLBACK
    ────────────────────────────────────────────── */
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+  res.sendFile(path.join(__dirname, '../frontend', 'index.html'));
 });
+
+/* ──────────────────────────────────────────────
+   USER AUTHENTICATION ROUTES
+   ────────────────────────────────────────────── */
+app.use('/api/users', usersRouter);
 
 /* ──────────────────────────────────────────────
    REST API ENDPOINTS (GLOBALAS_GRAMATAS)
