@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Pieslēgties - Look in My Book</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="src/main.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Momo+Trust+Display&family=Momo+Trust+Sans:wght@200..800&display=swap" rel="stylesheet">
+        <style>
+            .error { color: #d32f2f; font-size: 14px; margin-top: 5px; }
+            .success { color: #388e3c; font-size: 14px; margin-top: 5px; }
+            .form-message { padding: 10px; border-radius: 4px; margin-bottom: 15px; display: none; }
+            .form-message.error { background-color: #ffebee; border: 1px solid #d32f2f; }
+            .form-message.success { background-color: #e8f5e9; border: 1px solid #388e3c; }
+        </style>
+    </head>
+
+    <body>
+        <nav id="nav_bar">
+            <h1 id="logo">Logo</h1>
+
+            <ul id="nav_list">
+                <li><a href="registration.html" id="register_button">Reģistrēties</a></li>
+                <li><a href="login.html" id="login_button">Pieslēgties</a></li>
+                <li id="login_indicator" style="display: none;">
+                    <span id="user_greeting">Sveiki, <strong id="user_name"></strong>!</span>
+                    <a href="#" id="logout_link">Izrakstīties</a>
+                </li>
+            </ul>
+        </nav>
+
+        <form id="login_form" action="#">
+            <h1>Pieslēgties</h1>
+
+            <div id="form_message" class="form-message"></div>
+
+            <div>
+                <div>
+                    <label for="email">E-pasts</label>
+                    <input type="email" id="email" name="email" required/>
+                    <span class="error" id="error_email"></span>
+                </div>
+
+                <div>
+                    <label for="password">Parole</label>
+                    <input type="password" id="password" name="password" required/>
+                    <span class="error" id="error_password"></span>
+                </div>
+
+                <button type="button" id="cancel">Atcelt</button>
+                <button type="submit" id="submit">Pieslēgties</button>
+            </div>
+        </form>
+        
+        <script src="src/js/front.js"></script>
+        <script src="src/js/auth.js"></script>
+        <script>
+            // Clear error messages when user starts typing
+            ['email', 'password'].forEach(id => {
+                document.getElementById(id).addEventListener('focus', () => {
+                    document.getElementById('error_' + id).textContent = '';
+                });
+            });
+
+            document.getElementById("login_form").addEventListener("submit", async (event) => {
+                event.preventDefault();
+
+                // Clear previous messages
+                document.getElementById('form_message').style.display = 'none';
+                ['email', 'password'].forEach(id => {
+                    document.getElementById('error_' + id).textContent = '';
+                });
+
+                const email = document.getElementById("email").value.trim();
+                const password = document.getElementById("password").value;
+
+                let hasError = false;
+
+                // Validation
+                if (!email) {
+                    document.getElementById('error_email').textContent = 'E-pasts ir obligāts.';
+                    hasError = true;
+                }
+                if (!password) {
+                    document.getElementById('error_password').textContent = 'Parole ir obligāta.';
+                    hasError = true;
+                }
+
+                if (hasError) return;
+
+                try {
+                    const response = await fetch("http://localhost:1000/api/users/login", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            email: email,
+                            password: password
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    const messageDiv = document.getElementById('form_message');
+                    if (data.success) {
+                        // Store user info in localStorage
+                        localStorage.setItem('user', JSON.stringify(data.user));
+                        
+                        messageDiv.className = 'form-message success';
+                        messageDiv.textContent = data.message;
+                        messageDiv.style.display = 'block';
+                        
+                        // Update UI to show login indicator
+                        updateLoginIndicator();
+                        
+                        // Redirect to library/dashboard after 2 seconds
+                        setTimeout(() => {
+                            window.location.href = 'library.html';
+                        }, 2000);
+                    } else {
+                        messageDiv.className = 'form-message error';
+                        messageDiv.textContent = data.error;
+                        messageDiv.style.display = 'block';
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    const messageDiv = document.getElementById('form_message');
+                    messageDiv.className = 'form-message error';
+                    messageDiv.textContent = 'Gadījās kļūda. Lūdzu mēģiniet vēlreiz.';
+                    messageDiv.style.display = 'block';
+                }
+            });
+
+            document.getElementById("cancel").addEventListener("click", () => {
+                window.location.href = 'index.html';
+            });
+
+            // Check if user is already logged in
+            function checkLoginStatus() {
+                const user = localStorage.getItem('user');
+                if (user) {
+                    updateLoginIndicator();
+                }
+            }
+
+            function updateLoginIndicator() {
+                const user = JSON.parse(localStorage.getItem('user'));
+                if (user) {
+                    const loginBtn = document.getElementById('login_button');
+                    const registerBtn = document.getElementById('register_button');
+                    const loginIndicator = document.getElementById('login_indicator');
+                    const userName = document.getElementById('user_name');
+
+                    if (loginBtn) loginBtn.style.display = 'none';
+                    if (registerBtn) registerBtn.style.display = 'none';
+                    if (loginIndicator) {
+                        loginIndicator.style.display = 'block';
+                        userName.textContent = user.vards;
+                    }
+                }
+            }
+
+            // Logout functionality
+            const logoutLink = document.getElementById('logout_link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    localStorage.removeItem('user');
+                    fetch('http://localhost:1000/api/users/logout', {
+                        method: 'POST'
+                    }).then(() => {
+                        window.location.href = 'index.html';
+                    });
+                });
+            }
+
+            // Check login status on page load
+            checkLoginStatus();
+        </script>
+    </body>
+</html>
