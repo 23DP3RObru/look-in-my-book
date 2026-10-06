@@ -3,13 +3,20 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
+        <title>Reģistrēties - Look in My Book</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="src/main.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Momo+Trust+Display&family=Momo+Trust+Sans:wght@200..800&display=swap" rel="stylesheet">
+        <style>
+            .error { color: #d32f2f; font-size: 14px; margin-top: 5px; }
+            .success { color: #388e3c; font-size: 14px; margin-top: 5px; }
+            .form-message { padding: 10px; border-radius: 4px; margin-bottom: 15px; display: none; }
+            .form-message.error { background-color: #ffebee; border: 1px solid #d32f2f; }
+            .form-message.success { background-color: #e8f5e9; border: 1px solid #388e3c; }
+        </style>
     </head>
     <body>
         <nav>
@@ -18,84 +25,161 @@
             <ul>
                 <li><a href="registration.html" id="register_button">Reģistrēties</a></li>
                 <li><a href="login.html" id="login_button">Pieslēgties</a></li>
+                <li id="login_indicator" style="display: none;"><a href="#" id="logout_link">Izrakstīties</a></li>
             </ul>
         </nav>
 
-        <form action="registration" id="registration_form">
+        <form id="registration_form" action="#">
             <h1>Reģistrēties</h1>
+
+            <div id="form_message" class="form-message"></div>
 
             <div>
                 <div>
-                    <label for="name">Vārds</label>
+                    <label for="first_name">Vārds</label>
                     <input type="text" id="first_name" name="first_name" required/>
+                    <span class="error" id="error_first_name"></span>
                 </div>
 
                 <div>
                     <label for="last_name">Uzvārds</label>
                     <input type="text" id="last_name" name="last_name" required/>
+                    <span class="error" id="error_last_name"></span>
                 </div>
 
                 <div>
                     <label for="email">E-pasts</label>
-                    <input type="text" id="email" name="email" required/>
+                    <input type="email" id="email" name="email" required/>
+                    <span class="error" id="error_email"></span>
                 </div>
 
                 <div>
                     <label for="password">Parole</label>
                     <input type="password" id="password" name="password" required/>
+                    <span class="error" id="error_password"></span>
                 </div>
 
                 <div>
                     <label for="rep_password">Atkārtota parole</label>
                     <input type="password" id="rep_password" name="rep_password" required/>
+                    <span class="error" id="error_rep_password"></span>
                 </div>
 
                 <div>
                     <input type="checkbox" id="checkbox" name="checkbox" required/>
                     <label for="checkbox">Noklikšķinot šo es piekrītu mājaslapas lietošanas noteikumiem.</label>
+                    <span class="error" id="error_checkbox"></span>
                 </div>
 
                 <button type="button" id="cancel">Atcelt</button>
-
                 <button type="submit" id="submit">Reģistrēties</button>
             </div>
         </form>
         
-
-        <script src="" async defer>
+        <script src="src/js/front.js"></script>
+        <script src="src/js/auth.js"></script>
+        <script>
+            // Clear error messages when user starts typing
+            ['first_name', 'last_name', 'email', 'password', 'rep_password'].forEach(id => {
+                document.getElementById(id).addEventListener('focus', () => {
+                    document.getElementById('error_' + id).textContent = '';
+                });
+            });
 
             document.getElementById("registration_form").addEventListener("submit", async (event) => {
                 event.preventDefault();
 
-                const first_name = document.getElementById("first_name").value;
-
-                const last_name = document.getElementById("last_name").value;
-
-                const email = document.getElementById("email").value;
-
-                const password = document.getElementById("password").value;
-
-                const rep_password = document.getElementById("rep_password").value;
-
-                const response = await fetch("http://localhost:1000/api/users", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        first_name: first_name,
-                        last_name: last_name,
-                        email: email,
-                        password: password,
-                        rep_password: rep_password
-                    })
+                // Clear previous messages
+                document.getElementById('form_message').style.display = 'none';
+                ['first_name', 'last_name', 'email', 'password', 'rep_password', 'checkbox'].forEach(id => {
+                    document.getElementById('error_' + id).textContent = '';
                 });
 
-    const data = await response.json();
+                const first_name = document.getElementById("first_name").value.trim();
+                const last_name = document.getElementById("last_name").value.trim();
+                const email = document.getElementById("email").value.trim();
+                const password = document.getElementById("password").value;
+                const rep_password = document.getElementById("rep_password").value;
+                const checkbox = document.getElementById("checkbox").checked;
 
-    console.log(data);
-            })
+                let hasError = false;
 
+                // Validation
+                if (!first_name) {
+                    document.getElementById('error_first_name').textContent = 'Vārds ir obligāts.';
+                    hasError = true;
+                }
+                if (!last_name) {
+                    document.getElementById('error_last_name').textContent = 'Uzvārds ir obligāts.';
+                    hasError = true;
+                }
+                if (!email) {
+                    document.getElementById('error_email').textContent = 'E-pasts ir obligāts.';
+                    hasError = true;
+                }
+                if (!password) {
+                    document.getElementById('error_password').textContent = 'Parole ir obligāta.';
+                    hasError = true;
+                } else if (password.length < 6) {
+                    document.getElementById('error_password').textContent = 'Parole jābūt vismaz 6 rakstzīmēs.';
+                    hasError = true;
+                }
+                if (password !== rep_password) {
+                    document.getElementById('error_rep_password').textContent = 'Paroles nesakrīt.';
+                    hasError = true;
+                }
+                if (!checkbox) {
+                    document.getElementById('error_checkbox').textContent = 'Jums jāpiekrīt noteikumiem.';
+                    hasError = true;
+                }
+
+                if (hasError) return;
+
+                try {
+                    const response = await fetch("http://localhost:1000/api/users/register", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            first_name: first_name,
+                            last_name: last_name,
+                            email: email,
+                            password: password,
+                            rep_password: rep_password
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    const messageDiv = document.getElementById('form_message');
+                    if (data.success) {
+                        messageDiv.className = 'form-message success';
+                        messageDiv.textContent = data.message;
+                        messageDiv.style.display = 'block';
+                        document.getElementById('registration_form').reset();
+                        // Redirect to login after 2 seconds
+                        setTimeout(() => {
+                            window.location.href = 'login.html';
+                        }, 2000);
+                    } else {
+                        messageDiv.className = 'form-message error';
+                        messageDiv.textContent = data.error;
+                        messageDiv.style.display = 'block';
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    const messageDiv = document.getElementById('form_message');
+                    messageDiv.className = 'form-message error';
+                    messageDiv.textContent = 'Gadījās kļūda. Lūdzu mēģiniet vēlreiz.';
+                    messageDiv.style.display = 'block';
+                }
+            });
+
+            document.getElementById("cancel").addEventListener("click", () => {
+                window.location.href = 'index.html';
+            });
         </script>
     </body>
+</html>
 </html>

@@ -130,6 +130,18 @@
 
 <body>
 
+<nav style="background: #2c3e50; color: #fff; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center;">
+  <h1 style="font-size: 1.2rem;">Logo</h1>
+  <ul style="list-style: none; display: flex; gap: 20px; margin: 0;">
+    <li><a href="registration.html" id="register_button" style="color: #fff; text-decoration: none;">Reģistrēties</a></li>
+    <li><a href="login.html" id="login_button" style="color: #fff; text-decoration: none;">Pieslēgties</a></li>
+    <li id="login_indicator" style="display: none; color: #fff;">
+      <span id="user_greeting">Sveiki, <strong id="user_name"></strong>!</span>
+      <a href="#" id="logout_link" style="color: #fff; text-decoration: none; margin-left: 15px;">Izrakstīties</a>
+    </li>
+  </ul>
+</nav>
+
 <header>
   <h1>Book Management System</h1>
   <span class="api-status" id="apiStatus">● Connecting …</span>
@@ -435,6 +447,8 @@ function updateApiStatus(state, detail = '') {
   else                  { el.innerHTML = '○ Connecting …';    el.className = 'api-status'; }
 }
 </script>
+
+<script src="src/js/auth.js"></script>
 
 </body>
 </html>
