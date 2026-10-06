@@ -19,8 +19,7 @@ app.use(session({
   saveUninitialized: true,
   cookie: { maxAge: 1000 * 60 * 60 * 24 } // 24 hours
 }));
-
-const db = new sqlite3.Database(':memory:');
+const db = new sqlite3.Database('./data/app.db');
 
 // Enable foreign key support in SQLite
 db.run('PRAGMA foreign_keys = ON;');
