@@ -1,0 +1,67 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+nav {
+    width: 100%;
+    height: 80px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: 0 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+}
+
+nav h1 {
+    margin: 0;
+    font-family: 'Momo Trust Display', sans-serif;
+    color: #FF9D00;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: black;
+    font-family: 'Momo Trust Sans', sans-serif;
+}
+
+#register_button {
+    color: white;
+    font-weight: bold;
+    background-color: #FFC97E;
+    border: 1px solid #FF9D00;
+    border-radius: 5px;
+    padding: 10px 20px;
+    transition: box-shadow 0.5s ease;
+}
+
+#login_button {
+    color: white;
+    font-weight: bold;
+    background-color: #FF9D00;
+    border: 1px solid #FF9D00;
+    border-radius: 5px;
+    padding: 10px 20px;
+    transition:
+    box-shadow 0.5s ease,
+    background-color 0.5s ease,
+    border-color 0.5s ease;
+}
+
+#register_button:hover,
+#login_button:hover {
+    box-shadow: 0 0 10px 3px rgba(255, 157, 0, 0.7);
+    border-color: #ffaa21;
+    background-color: #ffaa21;
+}
