@@ -136,21 +136,13 @@
                 if (hasError) return;
 
                 try {
-                    const response = await fetch("http://localhost:1000/api/users/register", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            first_name: first_name,
-                            last_name: last_name,
-                            email: email,
-                            password: password,
-                            rep_password: rep_password
-                        })
+                    const data = await AuthAPI.register({
+                        first_name: first_name,
+                        last_name: last_name,
+                        email: email,
+                        password: password,
+                        rep_password: rep_password
                     });
-
-                    const data = await response.json();
 
                     const messageDiv = document.getElementById('form_message');
                     if (data.success) {
@@ -181,5 +173,4 @@
             });
         </script>
     </body>
-</html>
 </html>

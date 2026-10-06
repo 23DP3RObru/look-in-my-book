@@ -93,30 +93,16 @@
                 if (hasError) return;
 
                 try {
-                    const response = await fetch("http://localhost:1000/api/users/login", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            email: email,
-                            password: password
-                        })
-                    });
-
-                    const data = await response.json();
+                    const data = await AuthAPI.login(email, password);
 
                     const messageDiv = document.getElementById('form_message');
                     if (data.success) {
-                        // Store user info in localStorage
-                        localStorage.setItem('user', JSON.stringify(data.user));
-                        
                         messageDiv.className = 'form-message success';
                         messageDiv.textContent = data.message;
                         messageDiv.style.display = 'block';
                         
                         // Update UI to show login indicator
-                        updateLoginIndicator();
+                        AuthAPI.updateLoginIndicator();
                         
                         // Redirect to library/dashboard after 2 seconds
                         setTimeout(() => {
@@ -142,41 +128,10 @@
 
             // Check if user is already logged in
             function checkLoginStatus() {
-                const user = localStorage.getItem('user');
+                const user = AuthAPI.getStoredUser();
                 if (user) {
-                    updateLoginIndicator();
+                    AuthAPI.updateLoginIndicator();
                 }
-            }
-
-            function updateLoginIndicator() {
-                const user = JSON.parse(localStorage.getItem('user'));
-                if (user) {
-                    const loginBtn = document.getElementById('login_button');
-                    const registerBtn = document.getElementById('register_button');
-                    const loginIndicator = document.getElementById('login_indicator');
-                    const userName = document.getElementById('user_name');
-
-                    if (loginBtn) loginBtn.style.display = 'none';
-                    if (registerBtn) registerBtn.style.display = 'none';
-                    if (loginIndicator) {
-                        loginIndicator.style.display = 'block';
-                        userName.textContent = user.vards;
-                    }
-                }
-            }
-
-            // Logout functionality
-            const logoutLink = document.getElementById('logout_link');
-            if (logoutLink) {
-                logoutLink.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    localStorage.removeItem('user');
-                    fetch('http://localhost:1000/api/users/logout', {
-                        method: 'POST'
-                    }).then(() => {
-                        window.location.href = 'index.html';
-                    });
-                });
             }
 
             // Check login status on page load
