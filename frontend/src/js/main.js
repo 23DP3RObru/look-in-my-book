@@ -25,8 +25,11 @@ function updateLoginIndicator() {
     if (loginButton) loginButton.style.display = 'none';
     if (loginIndicator) loginIndicator.style.display = 'block';
     if (userName) userName.textContent = name;
-    if (profile && name) profile.style.display = 'flex';
-    if (profileLetter && name) profileLetter.textContent = name.charAt(0).toUpperCase();
+    if (profile && name) {
+        profile.style.display = 'flex';
+        profile.setAttribute('aria-label', `Profila attēls: ${name}`);
+    }
+    if (profileLetter && name) profileLetter.textContent = Array.from(name)[0].toLocaleUpperCase();
 }
 
 updateLoginIndicator();
