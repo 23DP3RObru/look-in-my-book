@@ -88,9 +88,17 @@ nav ul li a.active {
 @media (max-width: 768px) {
     nav {
         height: auto;
-        padding: 16px 20px;
+        position: relative;
+        padding: 16px 72px 16px 20px;
         flex-direction: column;
         gap: 14px;
+    }
+
+    .profile {
+        position: absolute;
+        top: 50%;
+        right: 16px;
+        transform: translateY(-50%);
     }
 
     #nav_list_left,
@@ -99,10 +107,6 @@ nav ul li a.active {
         justify-content: center;
         flex-wrap: wrap;
         gap: 12px 20px;
-    }
-
-    .profile {
-        align-self: flex-end;
     }
 
     #nav_list_left {
@@ -124,7 +128,7 @@ nav ul li a.active {
 
 @media (max-width: 480px) {
     nav {
-        padding: 14px 16px;
+        padding: 14px 64px 14px 16px;
     }
 
     #nav_list_left,
