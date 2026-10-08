@@ -98,30 +98,16 @@
                 if (hasError) return;
 
                 try {
-                    const response = await fetch("http://localhost:1000/api/users/login", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            email: email,
-                            password: password
-                        })
-                    });
-
-                    const data = await response.json();
+                    const data = await AuthAPI.login(email, password);
 
                     const messageDiv = document.getElementById('form_message');
                     if (data.success) {
-                        // Store user info in localStorage
-                        localStorage.setItem('user', JSON.stringify(data.user));
-                        
                         messageDiv.className = 'form-message success';
                         messageDiv.textContent = data.message;
                         messageDiv.style.display = 'block';
                         
                         // Update UI to show login indicator
-                        updateLoginIndicator();
+                        AuthAPI.updateLoginIndicator();
                         
                         // Redirect to library/dashboard after 2 seconds
                         setTimeout(() => {
@@ -145,6 +131,16 @@
                 window.location.href = 'index.html';
             });
 
+            // Check if user is already logged in
+            function checkLoginStatus() {
+                const user = AuthAPI.getStoredUser();
+                if (user) {
+                    AuthAPI.updateLoginIndicator();
+                }
+            }
+
+            // Check login status on page load
+            checkLoginStatus();
         </script>
     </body>
 </html>

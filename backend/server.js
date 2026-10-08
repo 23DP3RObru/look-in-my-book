@@ -9,15 +9,23 @@ const app = express();
 const PORT = process.env.PORT || 1000;
 
 app.use(express.static(path.join(__dirname, '../frontend')));
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
 app.use(express.json());
 
 // Configure session middleware
 app.use(session({
-  secret: 'your-secret-key-change-in-production',
+  secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
   resave: false,
-  saveUninitialized: true,
-  cookie: { maxAge: 1000 * 60 * 60 * 24 } // 24 hours
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: false,
+    maxAge: 1000 * 60 * 60 * 24
+  }
 }));
 const db = new sqlite3.Database('./data/app.db');
 
@@ -265,4 +273,4 @@ app.listen(PORT, () => {
 process.on('SIGTERM', () => {
   db.close(() => process.exit(0));
 });
-
+// test commit
