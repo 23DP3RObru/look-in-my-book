@@ -19,14 +19,19 @@
         </style>
     </head>
     <body>
-        <nav>
-            <h1>Logo</h1>
+        <nav id="nav_bar">
+            <ul id="nav_list_left">
+                <li><a href="hero.html" id="logo"><h1>LIMB</h1></a></li>
+            </ul>
 
-            <ul>
+            <ul id="nav_list_right">
                 <li><a href="registration.html" id="register_button">Reģistrēties</a></li>
                 <li><a href="login.html" id="login_button">Pieslēgties</a></li>
                 <li id="login_indicator" style="display: none;"><a href="#" id="logout_link">Izrakstīties</a></li>
             </ul>
+            <div id="profile" class="profile" role="img" aria-label="Profila attēls" style="display: none;">
+                <span id="profile-letter"></span>
+            </div>
         </nav>
 
         <form id="registration_form" action="#">
@@ -77,9 +82,8 @@
         </form>
         
         <script src="src/js/front.js"></script>
-        <script src="src/js/auth.js"></script>
+        <script src="src/js/main.js"></script>
         <script>
-            // Clear error messages when user starts typing
             ['first_name', 'last_name', 'email', 'password', 'rep_password'].forEach(id => {
                 document.getElementById(id).addEventListener('focus', () => {
                     document.getElementById('error_' + id).textContent = '';
@@ -89,7 +93,6 @@
             document.getElementById("registration_form").addEventListener("submit", async (event) => {
                 event.preventDefault();
 
-                // Clear previous messages
                 document.getElementById('form_message').style.display = 'none';
                 ['first_name', 'last_name', 'email', 'password', 'rep_password', 'checkbox'].forEach(id => {
                     document.getElementById('error_' + id).textContent = '';
@@ -104,7 +107,6 @@
 
                 let hasError = false;
 
-                // Validation
                 if (!first_name) {
                     document.getElementById('error_first_name').textContent = 'Vārds ir obligāts.';
                     hasError = true;
@@ -146,14 +148,38 @@
 
                     const messageDiv = document.getElementById('form_message');
                     if (data.success) {
-                        messageDiv.className = 'form-message success';
-                        messageDiv.textContent = data.message;
-                        messageDiv.style.display = 'block';
-                        document.getElementById('registration_form').reset();
-                        // Redirect to login after 2 seconds
-                        setTimeout(() => {
-                            window.location.href = 'login.html';
-                        }, 2000);
+                        try {
+                            const loginResponse = await fetch("http://localhost:1000/api/users/login", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({ email, password })
+                            });
+                            const loginData = await loginResponse.json();
+
+                            if (!loginData.success || !loginData.user) {
+                                throw new Error(loginData.error || 'Automatic login failed.');
+                            }
+
+                            localStorage.setItem('user', JSON.stringify(loginData.user));
+                            updateLoginIndicator();
+                            messageDiv.className = 'form-message success';
+                            messageDiv.textContent = 'Reģistrācija izdevās un esat pieslēdzies.';
+                            messageDiv.style.display = 'block';
+                            document.getElementById('registration_form').reset();
+                            setTimeout(() => {
+                                window.location.href = 'library.html';
+                            }, 2000);
+                        } catch (error) {
+                            console.error('Automatic login after registration failed:', error);
+                            messageDiv.className = 'form-message error';
+                            messageDiv.textContent = 'Konts izveidots, bet neizdevās automātiski pieslēgties. Lūdzu pieslēdzieties.';
+                            messageDiv.style.display = 'block';
+                            setTimeout(() => {
+                                window.location.href = 'login.html';
+                            }, 2000);
+                        }
                     } else {
                         messageDiv.className = 'form-message error';
                         messageDiv.textContent = data.error;
