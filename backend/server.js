@@ -124,6 +124,7 @@ function initDatabase() {
         lietotajs_id  INTEGER NOT NULL,
         sasniegums_id INTEGER NOT NULL,
         ieguts_at     DATETIME DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE (lietotajs_id, sasniegums_id),
         FOREIGN KEY (lietotajs_id) REFERENCES lietotajs(lietotajs_id) ON DELETE CASCADE,
         FOREIGN KEY (sasniegums_id) REFERENCES sasniegumi(sasniegums_id) ON DELETE CASCADE
       )

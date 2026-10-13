@@ -122,11 +122,51 @@ router.post('/login', (req, res, next) => {
 
 // GET /api/users/me - Get current logged in user
 router.get('/me', (req, res) => {
-  if (req.session.user) {
-    res.json({ success: true, user: req.session.user });
-  } else {
+  if (!req.session.user) {
     res.status(401).json({ success: false, error: 'Not logged in.' });
+    return;
   }
+
+  const db = req.app.get('db');
+  const userId = req.session.user.lietotajs_id;
+
+  db.get(
+    'SELECT lietotajs_id, vards, uzvards, epasts, loma FROM lietotajs WHERE lietotajs_id = ?',
+    [userId],
+    (err, user) => {
+      if (err) {
+        return res.status(500).json({ success: false, error: 'Database error.' });
+      }
+
+      if (!user) {
+        req.session.destroy(() => {});
+        return res.status(404).json({ success: false, error: 'User not found.' });
+      }
+
+      db.all(
+        `SELECT
+           s.sasniegums_id,
+           s.nosaukums,
+           s.apraksts,
+           s.nosacijums_tips,
+           ls.ieguts_at
+         FROM lietotaja_sasniegumi ls
+         INNER JOIN sasniegumi s ON s.sasniegums_id = ls.sasniegums_id
+         WHERE ls.lietotajs_id = ?
+         ORDER BY ls.ieguts_at DESC`,
+        [userId],
+        (err, achievements) => {
+          if (err) {
+            return res.status(500).json({ success: false, error: 'Database error.' });
+          }
+
+          const sessionUser = toSessionUser(user);
+          req.session.user = sessionUser;
+          res.json({ success: true, user: sessionUser, achievements });
+        }
+      );
+    }
+  );
 });
 
 // POST /api/users/logout - Logout user
