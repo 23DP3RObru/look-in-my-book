@@ -76,27 +76,38 @@
         }
 
         .badges {
-            display: grid;
-            grid-template-columns: repeat(4, 54px);
-            gap: 20px 22px;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
         .badge {
-            width: 54px;
-            height: 54px;
-            border-radius: 50%;
-            background: #d7d7d7;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ffffff;
-            font-size: 18px;
-            font-weight: 700;
-            text-transform: uppercase;
+            width: 100%;
+            padding: 10px 0 12px;
+            border-bottom: 1px solid #d7d7d7;
         }
 
-        .badge.earned {
-            background: #FF9D00;
+        .badge-name {
+            margin: 0 0 4px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .badge-description {
+            margin: 0;
+            font-size: 15px;
+            line-height: 1.35;
+            color: #444444;
+        }
+
+        .badges-empty {
+            margin: 0;
+            font-size: 15px;
+            color: #555555;
         }
 
         .profile-info {
@@ -157,10 +168,6 @@
                 margin-bottom: 30px;
             }
 
-            .badges {
-                grid-template-columns: repeat(3, 54px);
-            }
-
             .profile-info {
                 min-height: 0;
             }
@@ -184,14 +191,7 @@
                 </div>
 
                 <h2 class="badge-title">Sasniegumu žetoni:</h2>
-                <div id="badges" class="badges" aria-label="Sasniegumu žetoni">
-                    <span class="badge"></span>
-                    <span class="badge"></span>
-                    <span class="badge"></span>
-                    <span class="badge"></span>
-                    <span class="badge"></span>
-                    <span class="badge"></span>
-                </div>
+                <ul id="badges" class="badges" aria-label="Sasniegumu žetoni"></ul>
             </div>
 
             <div class="profile-info">
@@ -237,25 +237,31 @@
 
         function renderBadges(achievements = []) {
             const badges = document.getElementById('badges');
-            const visibleSlots = Math.max(6, achievements.length);
-
             badges.innerHTML = '';
 
-            for (let i = 0; i < visibleSlots; i++) {
-                const achievement = achievements[i];
-                const badge = document.createElement('span');
-                badge.className = achievement ? 'badge earned' : 'badge';
-
-                if (achievement) {
-                    badge.title = achievement.apraksts
-                        ? `${achievement.nosaukums}: ${achievement.apraksts}`
-                        : achievement.nosaukums;
-                    badge.textContent = Array.from(achievement.nosaukums || '?')[0]?.toUpperCase() || '?';
-                    badge.setAttribute('aria-label', achievement.nosaukums);
-                }
-
-                badges.appendChild(badge);
+            if (!achievements.length) {
+                const emptyMessage = document.createElement('li');
+                emptyMessage.className = 'badges-empty';
+                emptyMessage.textContent = 'Vēl nav iegūtu sasniegumu.';
+                badges.appendChild(emptyMessage);
+                return;
             }
+
+            achievements.forEach((achievement) => {
+                const badge = document.createElement('li');
+                const name = document.createElement('h3');
+                const description = document.createElement('p');
+
+                badge.className = 'badge';
+                name.className = 'badge-name';
+                description.className = 'badge-description';
+
+                name.textContent = achievement.nosaukums || 'Sasniegums';
+                description.textContent = achievement.apraksts || 'Apraksts nav pievienots.';
+
+                badge.append(name, description);
+                badges.appendChild(badge);
+            });
         }
 
         async function loadProfile() {
