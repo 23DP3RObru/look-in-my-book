@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300" width="200" height="300">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#141416"/>
+      <stop offset="60%" stop-color="#0a0a0c"/>
+      <stop offset="100%" stop-color="#050507"/>
+    </linearGradient>
+    <linearGradient id="chairGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2a2a30"/>
+      <stop offset="100%" stop-color="#111114"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="200" height="300" rx="6" fill="url(#bgGrad)"/>
+  <rect x="0" y="0" width="10" height="300" fill="#ffffff" opacity="0.06"/>
+
+  <!-- Top tagline -->
+  <text x="100" y="28" font-family="'Arial Black', Impact, sans-serif" font-size="6.5" font-weight="900" fill="#a0a0aa" text-anchor="middle" letter-spacing="0.5">THE #1 NEW YORK TIMES BESTSELLER</text>
+  <text x="100" y="38" font-family="'Arial Black', Impact, sans-serif" font-size="5.5" font-weight="700" fill="#757580" text-anchor="middle" letter-spacing="0.3">FROM THE AUTHOR OF THE HOUSEMAID</text>
+
+  <!-- Main Title: NEVER LIE -->
+  <text x="100" y="82" font-family="'Impact', 'Arial Black', sans-serif" font-size="44" font-weight="900" fill="#cc1818" text-anchor="middle" letter-spacing="3" filter="url(#shadow)">NEVER</text>
+  <text x="100" y="128" font-family="'Impact', 'Arial Black', sans-serif" font-size="54" font-weight="900" fill="#cc1818" text-anchor="middle" letter-spacing="4" filter="url(#shadow)">LIE</text>
+
+  <!-- Armchair silhouette graphic -->
+  <g transform="translate(45, 140)">
+    <!-- Shadow under chair -->
+    <ellipse cx="55" cy="88" rx="48" ry="8" fill="#000000" opacity="0.8"/>
+    <!-- Backrest -->
+    <rect x="22" y="10" width="66" height="52" rx="10" fill="url(#chairGrad)" stroke="#3a3a44" stroke-width="1.5"/>
+    <!-- Tufting buttons -->
+    <circle cx="38" cy="24" r="2.5" fill="#15151a" stroke="#4a4a55" stroke-width="0.8"/>
+    <circle cx="55" cy="24" r="2.5" fill="#15151a" stroke="#4a4a55" stroke-width="0.8"/>
+    <circle cx="72" cy="24" r="2.5" fill="#15151a" stroke="#4a4a55" stroke-width="0.8"/>
+    <circle cx="46" cy="38" r="2.5" fill="#15151a" stroke="#4a4a55" stroke-width="0.8"/>
+    <circle cx="64" cy="38" r="2.5" fill="#15151a" stroke="#4a4a55" stroke-width="0.8"/>
+    <!-- Armrests -->
+    <rect x="12" y="28" width="16" height="42" rx="7" fill="#222228" stroke="#3a3a44" stroke-width="1.2"/>
+    <rect x="82" y="28" width="16" height="42" rx="7" fill="#222228" stroke="#3a3a44" stroke-width="1.2"/>
+    <!-- Seat cushion -->
+    <rect x="22" y="52" width="66" height="24" rx="6" fill="#1c1c22" stroke="#33333d" stroke-width="1.2"/>
+    <!-- Legs -->
+    <line x1="24" y1="76" x2="18" y2="86" stroke="#443322" stroke-width="3" stroke-linecap="round"/>
+    <line x1="86" y1="76" x2="92" y2="86" stroke="#443322" stroke-width="3" stroke-linecap="round"/>
+  </g>
+
+  <!-- Author Name: FREIDA McFADDEN -->
+  <text x="100" y="260" font-family="'Arial Black', Impact, sans-serif" font-size="19" font-weight="900" fill="#eaeaea" text-anchor="middle" letter-spacing="2">FREIDA</text>
+  <text x="100" y="282" font-family="'Arial Black', Impact, sans-serif" font-size="20" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="1">McFADDEN</text>
+</svg>

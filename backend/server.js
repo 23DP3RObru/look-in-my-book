@@ -4,20 +4,31 @@ const cors = require('cors');
 const path = require('path');
 const session = require('express-session');
 const usersRouter = require('./routes/users');
+const statisticsRouter = require('./routes/statistics');
+const readingRouter = require('./routes/reading');
+const { seedDatabase } = require('./seed');
 
 const app = express();
 const PORT = process.env.PORT || 1000;
 
 app.use(express.static(path.join(__dirname, '../frontend')));
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
 app.use(express.json());
 
 // Configure session middleware
 app.use(session({
-  secret: 'your-secret-key-change-in-production',
+  secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
   resave: false,
-  saveUninitialized: true,
-  cookie: { maxAge: 1000 * 60 * 60 * 24 } // 24 hours
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: false,
+    maxAge: 1000 * 60 * 60 * 24
+  }
 }));
 const db = new sqlite3.Database('./data/app.db');
 
@@ -116,6 +127,7 @@ function initDatabase() {
         lietotajs_id  INTEGER NOT NULL,
         sasniegums_id INTEGER NOT NULL,
         ieguts_at     DATETIME DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE (lietotajs_id, sasniegums_id),
         FOREIGN KEY (lietotajs_id) REFERENCES lietotajs(lietotajs_id) ON DELETE CASCADE,
         FOREIGN KEY (sasniegums_id) REFERENCES sasniegumi(sasniegums_id) ON DELETE CASCADE
       )
@@ -123,21 +135,8 @@ function initDatabase() {
 
     console.log('✅ All 7 tables successfully created.');
 
-    // Seed Sample Books
-    const sampleData = [
-      ['The Great Gatsby', 'F. Scott Fitzgerald', 180, 'Classic', 4.5],
-      ['1984', 'George Orwell', 326, 'Dystopian', 4.8],
-      ['The Hobbit', 'J.R.R. Tolkien', 310, 'Fantasy', 4.9],
-    ];
-
-    const insertSql = `INSERT INTO globalas_gramatas (nosaukums, autors, lapas_kopa, zanrs, atsauksmes_atskaites) VALUES (?, ?, ?, ?, ?)`;
-
-    sampleData.forEach(row => {
-      db.run(insertSql, row, (err) => {
-        if (err) console.error(`❌ Error inserting row: ${err.message}`);
-        else console.log(`✅ Sample book inserted: ${row[0]}`);
-      });
-    });
+    // Seed database with books, achievements, and statistics
+    seedDatabase(db);
   });
 }
 
@@ -154,6 +153,8 @@ app.get('/', (req, res) => {
    USER AUTHENTICATION ROUTES
    ────────────────────────────────────────────── */
 app.use('/api/users', usersRouter);
+app.use('/api/statistics', statisticsRouter);
+app.use('/api/reading', readingRouter);
 
 /* ──────────────────────────────────────────────
    REST API ENDPOINTS (GLOBALAS_GRAMATAS)
@@ -265,3 +266,4 @@ app.listen(PORT, () => {
 process.on('SIGTERM', () => {
   db.close(() => process.exit(0));
 });
+// test commit

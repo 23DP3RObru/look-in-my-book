@@ -87,6 +87,7 @@
         
         <script src="src/js/front.js"></script>
         <script src="src/js/main.js"></script>
+        <script src="src/js/auth.js"></script>
         <script>
             ['first_name', 'last_name', 'email', 'password', 'rep_password'].forEach(id => {
                 document.getElementById(id).addEventListener('focus', () => {
@@ -142,40 +143,19 @@
                 if (hasError) return;
 
                 try {
-                    const response = await fetch("http://localhost:1000/api/users/register", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            first_name: first_name,
-                            last_name: last_name,
-                            email: email,
-                            password: password,
-                            rep_password: rep_password
-                        })
+                    const data = await AuthAPI.register({
+                        first_name: first_name,
+                        last_name: last_name,
+                        email: email,
+                        password: password,
+                        rep_password: rep_password
                     });
-
-                    const data = await response.json();
 
                     const messageDiv = document.getElementById('form_message');
                     if (data.success) {
                         try {
-                            const loginResponse = await fetch("http://localhost:1000/api/users/login", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json"
-                                },
-                                body: JSON.stringify({ email, password })
-                            });
-                            const loginData = await loginResponse.json();
-
-                            if (!loginData.success || !loginData.user) {
-                                throw new Error(loginData.error || 'Automatic login failed.');
-                            }
-
-                            localStorage.setItem('user', JSON.stringify(loginData.user));
-                            updateLoginIndicator();
+                            await AuthAPI.login(email, password);
+                            AuthAPI.updateLoginIndicator();
                             messageDiv.className = 'form-message success';
                             messageDiv.textContent = 'Reģistrācija izdevās un esat pieslēdzies.';
                             messageDiv.style.display = 'block';
@@ -211,5 +191,4 @@
             });
         </script>
     </body>
-</html>
 </html>
