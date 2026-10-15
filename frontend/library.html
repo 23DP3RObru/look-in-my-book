@@ -1,34 +1,220 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="src/main.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Momo+Trust+Display&family=Momo+Trust+Sans:wght@200..800&display=swap" rel="stylesheet">
-    </head>
-    <body>
+<html lang="lv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bibliotēka | LIMB</title>
+  <link rel="stylesheet" href="src/main.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Momo+Trust+Display&family=Momo+Trust+Sans:wght@200..800&display=swap" rel="stylesheet">
+  <style>
+    :root { --orange:#ff9d00; --pale:#fff0d9; --ink:#25211d; }
+    * { box-sizing:border-box; }
+    body { min-height:100vh; color:var(--ink); font-family:'Momo Trust Sans',sans-serif; background:linear-gradient(105deg,#ffe7c3 0,#fffaf3 52%,#fff 100%); }
+    .library { max-width:1440px; margin:0 auto; padding:28px 34px 60px; }
+    .library-top { display:flex; align-items:center; justify-content:center; position:relative; margin:0 0 32px; }
+    .library-title { position:absolute; left:0; font:28px 'Momo Trust Display',sans-serif; margin:0; }
+    .tools { display:flex; gap:8px; align-items:center; }
+    .search-wrap { position:relative; }
+    .search-wrap input { width:min( min(38vw,360px), 100%); height:42px; padding:0 40px 0 14px; border:1px solid #d8d1c8; border-radius:9px; background:#fff; font:inherit; box-shadow:0 2px 5px #00000012; }
+    .search-icon { position:absolute; right:14px; top:9px; color:#948a7f; pointer-events:none; }
+    .tools select { height:42px; padding:0 12px; min-width:160px; border:1px solid var(--orange); border-radius:9px; background:#fff; color:#76501a; font:inherit; }
+    .add-book { position:absolute; right:0; top:-28px; width:62px; height:75px; border:0; background:#ffc77d; color:#fff; font-size:35px; font-weight:700; cursor:pointer; clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%); transition:background .2s,transform .2s; }
+    .add-book:hover { background:var(--orange); transform:translateY(2px); }
+    .book-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(205px,1fr)); gap:24px 20px; }
+    .book-card { min-width:0; min-height:345px; padding:14px 16px 12px; display:flex; flex-direction:column; align-items:center; text-align:center; border:1px solid #e6ddd2; border-radius:10px; background:#fff; box-shadow:0 3px 7px #50350e1a; }
+    .book-title { width:100%; min-height:25px; margin:0 0 8px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:15px; font-weight:700; }
+    .cover { width:132px; height:185px; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; overflow:hidden; padding:13px 10px; border:1px solid #d6d0c8; background:linear-gradient(150deg,#f8f2e8,#d9c9ad); box-shadow:0 3px 7px #0002; color:#38302a; }
+    .cover::after { content:''; position:absolute; inset:0 auto 0 0; width:7px; background:#76554355; }
+    .cover-mark { font:700 10px 'Momo Trust Sans',sans-serif; letter-spacing:2px; text-transform:uppercase; opacity:.7; }
+    .cover-title { margin:14px 0 9px; font:700 19px/1.05 'Momo Trust Display',sans-serif; text-transform:uppercase; overflow-wrap:anywhere; }
+    .cover-author { font-size:10px; letter-spacing:1px; text-transform:uppercase; }
+    .book-author { margin:9px 0 7px; color:#665f58; font-size:12px; }
+    .genres { min-height:42px; display:flex; flex-wrap:wrap; align-content:flex-start; justify-content:center; gap:4px; }
+    .genre { padding:3px 7px; border:1px solid #ffae35; border-radius:4px; background:#ffe0ad; font-size:10px; line-height:1.2; }
+    .save-book { margin:8px 0 5px; padding:5px 9px; border:1px solid #d8d1c8; border-radius:5px; background:#fff; color:#333; font:inherit; font-size:12px; cursor:pointer; }
+    .save-book:hover,.save-book.saved { border-color:var(--orange); background:#fff3df; color:#895300; }
+    .rating { display:flex; gap:2px; justify-content:center; color:#ffc400; line-height:1; }
+    .star { color:#ffc400; font-size:19px; }
+    .star.empty { color:#d7d7d7; }
+    .rating-label { margin-left:5px; color:#777; font-size:11px; align-self:center; }
+    .empty-state { grid-column:1/-1; padding:52px 20px; color:#756d64; text-align:center; }
+    .toast { position:fixed; left:50%; bottom:24px; z-index:20; transform:translate(-50%,20px); padding:11px 18px; border-radius:8px; background:#302b25; color:#fff; opacity:0; pointer-events:none; transition:.2s; }
+    .toast.show { opacity:1; transform:translate(-50%,0); }
+    .dialog-backdrop { display:none; position:fixed; inset:0; z-index:10; align-items:center; justify-content:center; padding:20px; background:#1b1712a6; }
+    .dialog-backdrop.open { display:flex; }
+    .dialog { width:min(100%,480px); padding:25px; border-radius:14px; background:#fff; box-shadow:0 12px 40px #0003; }
+    .dialog h2 { margin:0 0 18px; font:24px 'Momo Trust Display',sans-serif; }
+    .form-field { margin:0 0 13px; }
+    .form-field label { display:block; margin-bottom:5px; font-size:13px; font-weight:700; }
+    .form-field input { width:100%; padding:10px 11px; border:1px solid #d9d1c8; border-radius:7px; font:inherit; }
+    .dialog-actions { display:flex; justify-content:flex-end; gap:9px; margin-top:20px; }
+    .dialog-actions button { padding:9px 14px; border:0; border-radius:7px; font:inherit; cursor:pointer; }
+    .cancel { background:#f0ece7; }
+    .submit { background:var(--orange); color:white; font-weight:700; }
+    @media(max-width:700px) { .library{padding:24px 16px 44px}.library-top{padding-top:55px; margin-bottom:22px}.library-title{top:0;font-size:24px}.add-book{top:0;width:48px;height:58px;font-size:29px}.tools{width:100%;align-items:stretch}.search-wrap{flex:1;min-width:0}.search-wrap input{width:100%}.tools select{min-width:112px;max-width:42%;font-size:13px}.book-grid{grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:14px}.book-card{padding:12px 10px;min-height:330px}.cover{width:120px;height:170px} }
+    @media(max-width:400px) { .book-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tools select{padding:0 6px;min-width:98px} }
+  </style>
+</head>
+<body>
+  <nav id="nav_bar">
+    <ul id="nav_list_left">
+      <li><a href="hero.html" id="logo"><h1>LIMB</h1></a></li>
+      <li><a href="library.html" class="active">Bibliotēka</a></li>
+      <li><a href="statistics.html">Informācijas panelis</a></li>
+    </ul>
+    <ul id="nav_list_right">
+      <li><a href="registration.html" id="register_button">Reģistrēties</a></li>
+      <li><a href="login.html" id="login_button">Pieslēgties</a></li>
+      <li id="login_indicator" style="display:none"><span>Sveiki, <strong id="user_name"></strong>!</span><a href="#" id="logout_link">Izrakstīties</a></li>
+    </ul>
+    <div id="profile" class="profile" role="img" aria-label="Profila attēls" style="display:none"><span id="profile-letter"></span></div>
+  </nav>
+  <main class="library">
+    <section class="library-top" aria-label="Grāmatu meklēšana un filtri">
+      <h1 class="library-title">Bibliotēka</h1>
+      <div class="tools">
+        <label class="search-wrap"><input id="searchInput" type="search" placeholder="Meklēt grāmatu..." autocomplete="off" aria-label="Meklēt pēc grāmatas nosaukuma"><span class="search-icon" aria-hidden="true">⌕</span></label>
+        <select id="sortFilter" aria-label="Kārtot grāmatas"><option value="default">Filtri</option><option value="title-asc">Nosaukums: A–Z</option><option value="title-desc">Nosaukums: Z–A</option><option value="author-asc">Autors: A–Z</option><option value="author-desc">Autors: Z–A</option><option value="rating-desc">Vērtējums: augstākais</option><option value="rating-5">5 zvaigznes</option><option value="rating-4">4+ zvaigznes</option></select>
+      </div>
+      <button class="add-book" id="addBookButton" type="button" aria-label="Pievienot jaunu grāmatu" title="Pievienot jaunu grāmatu">+</button>
+    </section>
+    <section class="book-grid" id="bookGrid" aria-live="polite"></section>
+  </main>
+  <div class="dialog-backdrop" id="dialogBackdrop" role="presentation">
+    <section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle">
+      <h2 id="dialogTitle">Pievienot grāmatu</h2>
+      <form id="bookForm">
+        <div class="form-field"><label for="bookTitle">Nosaukums *</label><input id="bookTitle" name="nosaukums" required maxlength="180"></div>
+        <div class="form-field"><label for="bookAuthor">Autors *</label><input id="bookAuthor" name="autors" required maxlength="140"></div>
+        <div class="form-field"><label for="bookGenre">Žanri</label><input id="bookGenre" name="zanrs" placeholder="Piemēram: Fantāzija, piedzīvojumi"></div>
+        <div class="form-field"><label for="bookPages">Lappušu skaits</label><input id="bookPages" name="lapas_kopa" type="number" min="0" value="0"></div>
+        <div class="dialog-actions"><button class="cancel" id="cancelDialog" type="button">Atcelt</button><button class="submit" type="submit">Pievienot</button></div>
+      </form>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="src/js/main.js"></script>
+  <script>
+    const API = '/api/books';
+    const grid = document.getElementById('bookGrid');
+    const searchInput = document.getElementById('searchInput');
+    const sortFilter = document.getElementById('sortFilter');
+    let books = [];
+    let savedBookIds = new Set();
+    let toastTimer;
 
-        <nav id="nav_bar">
-            <ul id="nav_list_left">
-                <li><a href="hero.html" id="logo"><h1>LIMB</h1></a></li>
-                <li><a href="library.html" class="active">Bibliotēka</a></li>
-                <li><a href="statistics.html">Informācijas panelis</a></li>
-            </ul>
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+    }
 
-            <ul id="nav_list_right">
-                <li><a href="registration.html" id="register_button">Reģistrēties</a></li>
-                <li><a href="login.html" id="login_button">Pieslēgties</a></li>
-            </ul>
-            <div id="profile" class="profile" role="img" aria-label="Profila attēls" style="display: none;">
-                <span id="profile-letter"></span>
-            </div>
-        </nav>
+    async function loadBooks() {
+      grid.innerHTML = '<p class="empty-state">Ielādē grāmatas…</p>';
+      try {
+        const [bookResponse, shelfResponse] = await Promise.all([
+          fetch(API), fetch(`${API}/saved`, { credentials: 'same-origin' })
+        ]);
+        if (!bookResponse.ok) throw new Error('Neizdevās ielādēt grāmatas.');
+        books = await bookResponse.json();
+        savedBookIds = shelfResponse.ok ? new Set((await shelfResponse.json()).map(row => Number(row.gramata_id))) : new Set();
+        renderBooks();
+      } catch (error) {
+        grid.innerHTML = '<p class="empty-state">Neizdevās pieslēgties bibliotēkai. Pārbaudi, vai serveris darbojas.</p>';
+      }
+    }
 
-        <script src="src/js/main.js"></script>
-    </body>
+    function normalized(value) { return String(value || '').toLocaleLowerCase('lv'); }
+
+    function visibleBooks() {
+      const query = normalized(searchInput.value.trim());
+      const sort = sortFilter.value;
+      let list = books.filter(book => normalized(book.nosaukums).includes(query));
+      if (sort === 'rating-5') list = list.filter(book => Number(book.atsauksmes_atskaites) >= 4.5);
+      if (sort === 'rating-4') list = list.filter(book => Number(book.atsauksmes_atskaites) >= 4);
+      const sorters = {
+        'title-asc': (a,b) => normalized(a.nosaukums).localeCompare(normalized(b.nosaukums), 'lv'),
+        'title-desc': (a,b) => normalized(b.nosaukums).localeCompare(normalized(a.nosaukums), 'lv'),
+        'author-asc': (a,b) => normalized(a.autors).localeCompare(normalized(b.autors), 'lv'),
+        'author-desc': (a,b) => normalized(b.autors).localeCompare(normalized(a.autors), 'lv'),
+        'rating-desc': (a,b) => Number(b.atsauksmes_atskaites || 0) - Number(a.atsauksmes_atskaites || 0)
+      };
+      if (sorters[sort]) list.sort(sorters[sort]);
+      return list;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+    }
+
+    function renderBooks() {
+      const list = visibleBooks();
+      if (!list.length) {
+        grid.innerHTML = '<p class="empty-state">Grāmatas nav atrastas. Pievieno pirmo grāmatu ar + pogu.</p>';
+        return;
+      }
+      grid.innerHTML = list.map((book, index) => {
+        const rating = Math.max(0, Math.min(5, Number(book.atsauksmes_atskaites) || 0));
+        const rounded = Math.round(rating);
+        const genres = String(book.zanrs || '').split(/[,;]/).map(item => item.trim()).filter(Boolean);
+        const saved = savedBookIds.has(Number(book.gramata_id));
+        const hue = (index * 47 + String(book.nosaukums).length * 9) % 360;
+        return `<article class="book-card">
+          <h2 class="book-title" title="${escapeHtml(book.nosaukums)}">${escapeHtml(book.nosaukums)}</h2>
+          <div class="cover" style="background:linear-gradient(145deg,hsl(${hue} 44% 95%),hsl(${hue} 32% 76%))" role="img" aria-label="${escapeHtml(book.nosaukums)} vāka vietturis">
+            <span class="cover-mark">LIMB · bibliotēka</span><span class="cover-title">${escapeHtml(book.nosaukums)}</span><span class="cover-author">${escapeHtml(book.autors)}</span>
+          </div>
+          <p class="book-author">${escapeHtml(book.autors)}</p>
+          <div class="genres">${genres.length ? genres.map(genre => `<span class="genre">${escapeHtml(genre)}</span>`).join('') : '<span class="genre">Žanrs nav norādīts</span>'}</div>
+          <button class="save-book ${saved ? 'saved' : ''}" type="button" data-save="${Number(book.gramata_id)}" aria-pressed="${saved}">${saved ? '✓ Saglabāta manā plauktā' : '＋ Saglabāt sev'}</button>
+          <div class="rating" aria-label="Vērtējums ${rating.toFixed(1)} no 5">${Array.from({length:5},(_,i)=>`<span class="star ${i >= rounded ? 'empty' : ''}">${i < rounded ? '★' : '☆'}</span>`).join('')}<span class="rating-label">${rating.toFixed(1)}</span></div>
+        </article>`;
+      }).join('');
+    }
+
+    grid.addEventListener('click', async event => {
+      const button = event.target.closest('[data-save]');
+      if (!button) return;
+      const id = Number(button.dataset.save);
+      const isSaved = savedBookIds.has(id);
+      try {
+        const response = await fetch(`${API}/${id}/save`, { method: isSaved ? 'DELETE' : 'POST', credentials: 'same-origin' });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Neizdevās saglabāt grāmatu.');
+        if (isSaved) savedBookIds.delete(id); else savedBookIds.add(id);
+        renderBooks();
+        showToast(isSaved ? 'Grāmata izņemta no tava plaukta.' : 'Grāmata saglabāta tavā plauktā.');
+      } catch (error) { showToast(error.message); }
+    });
+
+    searchInput.addEventListener('input', renderBooks);
+    sortFilter.addEventListener('change', renderBooks);
+    const backdrop = document.getElementById('dialogBackdrop');
+    document.getElementById('addBookButton').addEventListener('click', () => backdrop.classList.add('open'));
+    document.getElementById('cancelDialog').addEventListener('click', () => backdrop.classList.remove('open'));
+    backdrop.addEventListener('click', event => { if (event.target === backdrop) backdrop.classList.remove('open'); });
+    document.addEventListener('keydown', event => { if (event.key === 'Escape') backdrop.classList.remove('open'); });
+    document.getElementById('bookForm').addEventListener('submit', async event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const payload = Object.fromEntries(new FormData(form));
+      payload.lapas_kopa = Number(payload.lapas_kopa) || 0;
+      try {
+        const response = await fetch(API, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Neizdevās pievienot grāmatu.');
+        form.reset();
+        backdrop.classList.remove('open');
+        showToast('Grāmata pievienota bibliotēkai.');
+        await loadBooks();
+      } catch (error) { showToast(error.message); }
+    });
+
+    loadBooks();
+  </script>
+</body>
 </html>
