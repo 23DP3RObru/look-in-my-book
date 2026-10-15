@@ -1,35 +1,264 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="src/main.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Momo+Trust+Display&family=Momo+Trust+Sans:wght@200..800&display=swap" rel="stylesheet">
-    </head>
-    <body>
+<html lang="lv">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Look in My Book - Seko līdzi katrai izlasītai lapaspusei</title>
+    <meta name="description" content="Ērtākā platforma grāmatu lasītājiem: seko līdzi lasīšanas progresam, ātrumam un personīgajai statistikai.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Momo+Trust+Display&family=Momo+Trust+Sans:wght@200..800&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="src/main.css">
+    <link rel="stylesheet" href="src/hero.css">
+</head>
 
-        <nav id="nav_bar">
-            <ul id="nav_list_left">
-                <li><a href="hero.html" id="logo"><h1>LIMB</h1></a></li>
-                <li><a href="library.html">Bibliotēka</a></li>
-                <li><a href="statistics.html">Informācijas panelis</a></li>
-            </ul>
+<body class="hero-page">
 
-            <ul id="nav_list_right">
-                <li><a href="registration.html" id="register_button">Reģistrēties</a></li>
-                <li><a href="login.html" id="login_button">Pieslēgties</a></li>
-            </ul>
+    <!-- Top Navigation Bar -->
+    <nav id="nav_bar">
+        <ul id="nav_list_left">
+            <li><a href="hero.html" id="logo"><h1>LIMB</h1></a></li>
+            <li><a href="library.html">Bibliotēka</a></li>
+            <li><a href="statistics.html">Informācijas panelis</a></li>
+        </ul>
 
-            <div id="profile" class="profile" style="display: none;">
-                <span id="profile-letter"></span>
+        <ul id="nav_list_right">
+            <li><a href="registration.html" id="register_button">Reģistrēties</a></li>
+            <li><a href="login.html" id="login_button">Pierakstīties</a></li>
+            <li id="login_indicator" style="display: none;">
+                <span id="user_greeting">Sveiki, <strong id="user_name"></strong>!</span>
+                <a href="#" id="logout_link">Izrakstīties</a>
+            </li>
+        </ul>
+
+        <div id="profile" class="profile" role="img" aria-label="Profila attēls" style="display: none;">
+            <span id="profile-letter"></span>
+        </div>
+    </nav>
+
+    <!-- Main Hero Section -->
+    <main class="hero-container">
+        <div class="hero-main-row">
+            
+            <!-- Left Hero Content -->
+            <div class="hero-content-left">
+                <h1 class="hero-title">
+                    Seko līdzi <span class="highlight-orange">katrai</span><br>
+                    izlasītai <span class="highlight-orange">lapaspusei</span>
+                </h1>
+
+                <p class="hero-subtitle">
+                    Izmanto ērtākos rīkus veidotus grāmatu lasītājiem un padari savu grāmatu uzskaites procesu daudz ērtāku!
+                </p>
+
+                <p class="hero-subtitle-lead">
+                    Neklausies mūsos, klausies mūsu apmierināto klientu atsauksmēs.
+                </p>
+
+                <div class="hero-actions-row">
+                    <button type="button" class="hero-btn-primary" id="btn-open-review-modal">
+                        ✍️ Pievienot atsauksmi
+                    </button>
+                    <a href="statistics.html" class="hero-btn-secondary">
+                        Apskatīt statistiku &rarr;
+                    </a>
+                </div>
+
+                <!-- Open Book Illustration -->
+                <div class="hero-book-wrapper">
+                    <img src="src/img/open-book.svg" alt="Atvērta grāmata" class="hero-book-img">
+                </div>
             </div>
-        </nav>
 
-        <script src="src/js/main.js"></script>
-    </body>
+            <!-- Right Hero Reviews Stack -->
+            <div class="hero-reviews-column">
+                <div class="hero-reviews-header-row">
+                    <span class="hero-reviews-badge">Jaunākās atsauksmes</span>
+                    <button type="button" class="hero-add-review-link" id="btn-open-review-modal-header">+ Pievienot atsauksmi</button>
+                </div>
+
+                <div class="hero-reviews-stack" id="hero-reviews-stack">
+                    <!-- Populated dynamically via hero.js (with pre-rendered static fallbacks matching image) -->
+                    <div class="hero-review-card">
+                        <div class="review-card-header">
+                            <div class="review-avatar" style="background-color: #d9f99d; color: #3f6212;">T</div>
+                            <div class="review-author-info">
+                                <div class="review-author-name">Toms Urbenis</div>
+                                <div class="review-target-tag">Look in My Book platforma</div>
+                            </div>
+                            <div class="review-stars">
+                                <span style="color:#FFC000;">★★★★</span><span style="color:#cbd5e1;">☆</span>
+                            </div>
+                        </div>
+                        <p class="review-card-body">
+                            Nekad nav bijis vieglāk veikt manga un tumšās psiholoģijas grāmatu uzskaitīšanu, kā kopš "Look in my book" aktīvas izmantošanas.
+                        </p>
+                    </div>
+
+                    <div class="hero-review-card">
+                        <div class="review-card-header">
+                            <div class="review-avatar" style="background-color: #fca5a5; color: #991b1b;">R</div>
+                            <div class="review-author-info">
+                                <div class="review-author-name">Reinis Balters</div>
+                                <div class="review-target-tag">Look in My Book platforma</div>
+                            </div>
+                            <div class="review-stars">
+                                <span style="color:#FFC000;">★★★★★</span>
+                            </div>
+                        </div>
+                        <p class="review-card-body">
+                            Labākā grāmatu uzskaites aplikācija, ko esmu izmantojis savos trīs gadsimtos uz šīs skaitās zemes.
+                        </p>
+                    </div>
+
+                    <div class="hero-review-card">
+                        <div class="review-card-header">
+                            <div class="review-avatar" style="background-color: #7dd3fc; color: #075985;">E</div>
+                            <div class="review-author-info">
+                                <div class="review-author-name">Emīls Krūklis</div>
+                                <div class="review-target-tag">Look in My Book platforma</div>
+                            </div>
+                            <div class="review-stars">
+                                <span style="color:#FFC000;">★★★★</span><span style="color:#cbd5e1;">☆</span>
+                            </div>
+                        </div>
+                        <p class="review-card-body">
+                            Esmu patīkami pārsteigts ar mājaslapas plašo statistiku!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Stats Section ("Vairāk, kā") -->
+    <section class="stats-banner-container">
+        <div class="stats-banner-inner">
+            <h2 class="stats-banner-title">Vairāk, kā</h2>
+            <div class="stats-banner-grid">
+                <div class="stats-banner-item">
+                    <div class="stats-banner-num">10 Tūkst.</div>
+                    <div class="stats-banner-label">Aktīvi lietotāji</div>
+                </div>
+                <div class="stats-banner-item">
+                    <div class="stats-banner-num" id="stats-positive-reviews">1000</div>
+                    <div class="stats-banner-label">Pozitīvas atsauksmes</div>
+                </div>
+                <div class="stats-banner-item">
+                    <div class="stats-banner-num">3 Milj.</div>
+                    <div class="stats-banner-label">Kopā izlasītu grāmatu lapaspušu</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section ("Mēs jums piedāvāsim") -->
+    <section class="hero-features-section">
+        <h2 class="features-title">Mēs jums piedāvāsim</h2>
+        <div class="features-grid">
+            <!-- Feature Card 1 -->
+            <div class="feature-card">
+                <div class="feature-card-icon">📚</div>
+                <h3 class="feature-card-title">Personīgais plaukts</h3>
+                <p class="feature-card-desc">
+                    Pārvaldi un kārto visas savas grāmatas. Seko līdzi to statusam: "plānots lasīt", "pašlaik lasu" un "izlasīts". Visi tavi lasīšanas plāni vienuviet.
+                </p>
+                <ul class="feature-bullet-list">
+                    <li><span class="check">✓</span> Ātra grāmatu pievienošana</li>
+                    <li><span class="check">✓</span> Progresa josla katrai grāmatai</li>
+                    <li><span class="check">✓</span> Žanru un autoru šķirošana</li>
+                </ul>
+            </div>
+
+            <!-- Feature Card 2 -->
+            <div class="feature-card">
+                <div class="feature-card-icon">📈</div>
+                <h3 class="feature-card-title">Viedā lasīšanas statistika</h3>
+                <p class="feature-card-desc">
+                    Seko līdzi katrai izlasītajai lapaspusei. Mūsu sistēma automātiski aprēķina tavu vidējo lasīšanas tempu minūtēs un veido detalizētu aktivitātes kopsavilkumu.
+                </p>
+                <ul class="feature-bullet-list">
+                    <li><span class="check">✓</span> Lasīšanas temps (lapas/min)</li>
+                    <li><span class="check">✓</span> Aktivitātes kalendāra režģis</li>
+                    <li><span class="check">✓</span> Mēnešu uzlabojumu grafiki</li>
+                </ul>
+            </div>
+
+            <!-- Feature Card 3 -->
+            <div class="feature-card">
+                <div class="feature-card-icon">🏆</div>
+                <h3 class="feature-card-title">Sasniegumi un vērtējumi</h3>
+                <p class="feature-card-desc">
+                    Padari lasīšanu aizraujošu! Pelni žetonus par sasniegtajiem mērķiem, pievieno 5 zvaigžņu vērtējumus grāmatām un platformai un dalies ar savu pieredzi.
+                </p>
+                <ul class="feature-bullet-list">
+                    <li><span class="check">✓</span> Dinamiski sasniegumu līmeņi</li>
+                    <li><span class="check">✓</span> 5 zvaigžņu vērtēšanas sistēma</li>
+                    <li><span class="check">✓</span> Publiskas atsauksmes sākumlapā</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Review Modal: "Pievieno atsauksmi" (System & Books) -->
+    <div class="hero-modal-backdrop" id="hero-review-modal" role="dialog" aria-modal="true" aria-labelledby="hero-modal-title">
+        <div class="hero-modal-window">
+            <h2 id="hero-modal-title" class="hero-modal-title">Pievieno atsauksmi</h2>
+            <p class="hero-modal-lead">
+                Novērtē mūsu sistēmu vai kādu no bibliotēkas grāmatām un dalies ar savu pieredzi!
+            </p>
+
+            <div class="modal-form-group">
+                <label for="review-type-select" class="modal-form-label">Ko vēlies novērtēt?</label>
+                <select id="review-type-select" class="modal-form-select">
+                    <option value="sistema">Sistēmu / Platformu (Look in My Book)</option>
+                    <option value="gramata">Konkrētu grāmatu no bibliotēkas</option>
+                </select>
+            </div>
+
+            <div class="modal-form-group" id="book-select-group" style="display: none;">
+                <label for="review-book-select" class="modal-form-label">Izvēlies grāmatu:</label>
+                <select id="review-book-select" class="modal-form-select">
+                    <!-- Populated dynamically via JS -->
+                </select>
+            </div>
+
+            <div class="modal-form-group">
+                <label for="review-author-input" class="modal-form-label">Tavs vārds un uzvārds:</label>
+                <input type="text" id="review-author-input" class="modal-form-input" placeholder="Piem., Jānis Bērziņš">
+            </div>
+
+            <div class="modal-form-group">
+                <label class="modal-form-label">Tavs vērtējums:</label>
+                <div class="modal-stars-row" id="modal-stars">
+                    <button type="button" class="modal-star-btn filled" data-star="1">&#9733;</button>
+                    <button type="button" class="modal-star-btn filled" data-star="2">&#9733;</button>
+                    <button type="button" class="modal-star-btn filled" data-star="3">&#9733;</button>
+                    <button type="button" class="modal-star-btn filled" data-star="4">&#9733;</button>
+                    <button type="button" class="modal-star-btn filled" data-star="5">&#9733;</button>
+                </div>
+            </div>
+
+            <div class="modal-form-group">
+                <label for="review-text-input" class="modal-form-label">Tava atsauksme:</label>
+                <textarea id="review-text-input" class="modal-form-textarea" placeholder="Uzraksti, ko domā par Look in My Book vai šo grāmatu..."></textarea>
+            </div>
+
+            <div class="hero-modal-actions">
+                <button type="button" class="modal-btn-cancel" id="btn-cancel-hero-review">Atcelt</button>
+                <button type="button" class="modal-btn-submit" id="btn-submit-hero-review">Iesniegt atsauksmi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/js/main.js"></script>
+    <script src="src/js/hero.js"></script>
+</body>
 </html>

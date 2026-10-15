@@ -103,7 +103,7 @@
       logoutLink.addEventListener('click', async (event) => {
         event.preventDefault();
         await logout();
-        window.location.href = 'index.html';
+        window.location.href = 'hero.html';
       });
     }
   });

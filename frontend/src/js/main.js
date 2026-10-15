@@ -42,7 +42,7 @@ if (logoutLink) {
         fetch('http://localhost:1000/api/users/logout', { method: 'POST' })
             .catch((error) => console.error('Unable to log out from the server:', error))
             .finally(() => {
-                window.location.href = 'index.html';
+                window.location.href = 'hero.html';
             });
     });
 }

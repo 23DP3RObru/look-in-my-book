@@ -6,12 +6,13 @@ const session = require('express-session');
 const usersRouter = require('./routes/users');
 const statisticsRouter = require('./routes/statistics');
 const readingRouter = require('./routes/reading');
+const reviewsRouter = require('./routes/reviews');
 const { seedDatabase } = require('./seed');
 
 const app = express();
 const PORT = process.env.PORT || 1000;
 
-app.use(express.static(path.join(__dirname, '../frontend')));
+app.use(express.static(path.join(__dirname, '../frontend'), { index: 'hero.html' }));
 app.use(cors({
   origin: true,
   credentials: true
@@ -136,9 +137,24 @@ function initDatabase() {
       )
     `);
 
-    console.log('✅ All 7 tables successfully created.');
+    // 8. PLATFORMAS_ATSAUKSMES
+    db.run(`
+      CREATE TABLE IF NOT EXISTS platformas_atsauksmes (
+        atsauksme_id      INTEGER PRIMARY KEY AUTOINCREMENT,
+        lietotajs_id      INTEGER,
+        autora_vards      TEXT NOT NULL,
+        tips              TEXT DEFAULT 'sistema',
+        gramata_id        INTEGER,
+        gramata_nosaukums TEXT,
+        vertejums         INTEGER CHECK(vertejums BETWEEN 1 AND 5),
+        teksts            TEXT NOT NULL,
+        izveidots_at      DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
 
-    // Seed database with books, achievements, and statistics
+    console.log('✅ All tables successfully created.');
+
+    // Seed database with books, achievements, reviews, and statistics
     seedDatabase(db);
   });
 }
@@ -149,7 +165,10 @@ initDatabase();
    STATIC ROUTE FALLBACK
    ────────────────────────────────────────────── */
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend', 'index.html'));
+  res.sendFile(path.join(__dirname, '../frontend', 'hero.html'));
+});
+app.get('/index.html', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend', 'hero.html'));
 });
 
 /* ──────────────────────────────────────────────
@@ -158,6 +177,7 @@ app.get('/', (req, res) => {
 app.use('/api/users', usersRouter);
 app.use('/api/statistics', statisticsRouter);
 app.use('/api/reading', readingRouter);
+app.use('/api/reviews', reviewsRouter);
 
 /* ──────────────────────────────────────────────
    REST API ENDPOINTS (GLOBALAS_GRAMATAS)

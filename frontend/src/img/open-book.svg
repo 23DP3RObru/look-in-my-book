@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 280" width="500" height="280">
+  <defs>
+    <!-- Soft Page Gradients -->
+    <linearGradient id="pageGradLeft" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fffdfa"/>
+      <stop offset="70%" stop-color="#f5ede0"/>
+      <stop offset="100%" stop-color="#e2d2ba"/>
+    </linearGradient>
+    <linearGradient id="pageGradRight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fffdfa"/>
+      <stop offset="70%" stop-color="#f5ede0"/>
+      <stop offset="100%" stop-color="#e2d2ba"/>
+    </linearGradient>
+    <linearGradient id="spineGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#a07850"/>
+      <stop offset="50%" stop-color="#6e4f30"/>
+      <stop offset="100%" stop-color="#46311d"/>
+    </linearGradient>
+    <filter id="bookShadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.18 0"/>
+      <feOffset dx="0" dy="12"/>
+      <feBlend in="SourceGraphic" in2="blur" mode="normal"/>
+    </filter>
+  </defs>
+
+  <!-- Shadow underneath -->
+  <ellipse cx="250" cy="245" rx="200" ry="24" fill="#000000" opacity="0.09" filter="url(#bookShadow)"/>
+
+  <!-- Book Cover Bottom Spine -->
+  <path d="M 120 238 Q 250 258 380 238 L 382 248 Q 250 268 118 248 Z" fill="url(#spineGrad)" />
+
+  <!-- Multiple fanning pages - Left side -->
+  <!-- Layer 1 (bottom left) -->
+  <path d="M 250 240 C 200 238 120 234 60 215 C 50 190 60 170 85 160 C 140 180 200 210 250 240 Z" fill="#ecdcc7" opacity="0.75" />
+  <!-- Layer 2 -->
+  <path d="M 250 240 C 190 234 110 220 70 185 C 65 160 85 140 110 135 C 150 160 200 200 250 240 Z" fill="#f1e5d4" opacity="0.8" />
+  <!-- Layer 3 -->
+  <path d="M 250 240 C 190 230 115 200 85 155 C 85 130 115 110 145 110 C 175 145 210 190 250 240 Z" fill="#f7efe2" opacity="0.85" />
+  <!-- Layer 4 -->
+  <path d="M 250 240 C 195 220 130 170 110 120 C 118 100 150 85 180 90 C 195 130 220 185 250 240 Z" fill="#faf4eb" opacity="0.9" />
+  <!-- Layer 5 (Top Left Main Page) -->
+  <path d="M 250 240 C 200 215 145 145 140 90 C 155 75 190 65 220 75 C 225 125 235 185 250 240 Z" fill="url(#pageGradLeft)" stroke="#e4d4bd" stroke-width="0.8" />
+
+  <!-- Multiple fanning pages - Right side -->
+  <!-- Layer 1 (bottom right) -->
+  <path d="M 250 240 C 300 238 380 234 440 215 C 450 190 440 170 415 160 C 360 180 300 210 250 240 Z" fill="#ecdcc7" opacity="0.75" />
+  <!-- Layer 2 -->
+  <path d="M 250 240 C 310 234 390 220 430 185 C 435 160 415 140 390 135 C 350 160 300 200 250 240 Z" fill="#f1e5d4" opacity="0.8" />
+  <!-- Layer 3 -->
+  <path d="M 250 240 C 310 230 385 200 415 155 C 415 130 385 110 355 110 C 325 145 290 190 250 240 Z" fill="#f7efe2" opacity="0.85" />
+  <!-- Layer 4 -->
+  <path d="M 250 240 C 305 220 370 170 390 120 C 382 100 350 85 320 90 C 305 130 280 185 250 240 Z" fill="#faf4eb" opacity="0.9" />
+  <!-- Layer 5 (Top Right Main Page) -->
+  <path d="M 250 240 C 300 215 355 145 360 90 C 345 75 310 65 280 75 C 275 125 265 185 250 240 Z" fill="url(#pageGradRight)" stroke="#e4d4bd" stroke-width="0.8" />
+
+  <!-- Center spine crease shadow & highlight -->
+  <path d="M 248 70 Q 248 160 246 242 L 254 242 Q 252 160 252 70 Z" fill="#bfa07e" opacity="0.6"/>
+  <line x1="250" y1="70" x2="250" y2="242" stroke="#684a28" stroke-width="1.8" opacity="0.7"/>
+
+  <!-- Subtle text line simulation on pages -->
+  <path d="M 170 115 Q 190 135 220 150" stroke="#c0aa90" stroke-width="1.2" opacity="0.45" stroke-dasharray="8 4 12 4"/>
+  <path d="M 180 135 Q 200 155 225 170" stroke="#c0aa90" stroke-width="1.2" opacity="0.45" stroke-dasharray="14 4 10 4"/>
+  <path d="M 190 155 Q 210 175 230 190" stroke="#c0aa90" stroke-width="1.2" opacity="0.45" stroke-dasharray="10 4 14 4"/>
+
+  <path d="M 330 115 Q 310 135 280 150" stroke="#c0aa90" stroke-width="1.2" opacity="0.45" stroke-dasharray="12 4 8 4"/>
+  <path d="M 320 135 Q 300 155 275 170" stroke="#c0aa90" stroke-width="1.2" opacity="0.45" stroke-dasharray="10 4 14 4"/>
+  <path d="M 310 155 Q 290 175 270 190" stroke="#c0aa90" stroke-width="1.2" opacity="0.45" stroke-dasharray="14 4 10 4"/>
+</svg>

@@ -141,6 +141,25 @@ function seedDatabase(db) {
         });
       }
     });
+
+    // 6. Seed platform reviews if empty
+    db.get('SELECT COUNT(*) as count FROM platformas_atsauksmes', (err, row) => {
+      if (!row || row.count === 0) {
+        console.log('🌱 Seeding initial platform reviews from hero image...');
+        const initialReviews = [
+          ['Emīls Krūklis', 'sistema', null, null, 4, 'Esmu patīkami pārsteigts ar mājaslapas plašo statistiku!', '2026-10-10 12:00:00'],
+          ['Reinis Balters', 'sistema', null, null, 5, 'Labākā grāmatu uzskaites aplikācija, ko esmu izmantojis savos trīs gadsimtos uz šīs skaitās zemes.', '2026-10-11 14:30:00'],
+          ['Toms Urbenis', 'sistema', null, null, 4, 'Nekad nav bijis vieglāk veikt manga un tumšās psiholoģijas grāmatu uzskaitīšanu, kā kopš "Look in my book" aktīvas izmantošanas.', '2026-10-12 16:45:00']
+        ];
+
+        initialReviews.forEach(r => {
+          db.run(`
+            INSERT INTO platformas_atsauksmes (autora_vards, tips, gramata_id, gramata_nosaukums, vertejums, teksts, izveidots_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+          `, r);
+        });
+      }
+    });
   });
 }
 

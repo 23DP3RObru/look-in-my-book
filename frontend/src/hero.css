@@ -1,0 +1,588 @@
+/* ==========================================================================
+   HERO / SĀKUMLAPAS STYLES
+   ========================================================================== */
+
+:root {
+  --primary-orange: #FF9D00;
+  --primary-orange-light: #FFC97E;
+  --primary-orange-hover: #ffaa21;
+  --text-dark: #111827;
+  --text-muted: #555555;
+  --border-light: #e2e8f0;
+}
+
+body.hero-page {
+  background-color: #fcfbfa;
+  background-image: 
+    radial-gradient(circle at 4% 30%, rgba(255, 170, 50, 0.18) 0%, rgba(255, 255, 255, 0) 40%),
+    radial-gradient(circle at 6% 92%, rgba(255, 180, 60, 0.22) 0%, rgba(255, 255, 255, 0) 45%),
+    radial-gradient(circle at 95% 15%, rgba(255, 200, 100, 0.12) 0%, rgba(255, 255, 255, 0) 35%);
+  background-attachment: fixed;
+  font-family: 'Momo Trust Sans', 'Segoe UI', Tahoma, sans-serif;
+  color: var(--text-dark);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   1. HERO SECTION (TOP)
+   ========================================================================== */
+.hero-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px 20px;
+  box-sizing: border-box;
+}
+
+.hero-main-row {
+  display: grid;
+  grid-template-columns: 1.15fr 0.95fr;
+  gap: 40px;
+  align-items: center;
+  min-height: 480px;
+}
+
+.hero-content-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-right: 20px;
+}
+
+.hero-title {
+  font-family: 'Momo Trust Display', sans-serif;
+  font-size: 46px;
+  line-height: 1.18;
+  font-weight: 800;
+  color: #111111;
+  margin: 0 0 18px;
+  letter-spacing: -0.5px;
+}
+
+.hero-title .highlight-orange {
+  color: var(--primary-orange);
+}
+
+.hero-subtitle {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #222222;
+  margin: 0 0 14px;
+  max-width: 480px;
+}
+
+.hero-subtitle-lead {
+  font-size: 14px;
+  line-height: 1.45;
+  color: #333333;
+  margin: 0 0 20px;
+  max-width: 480px;
+}
+
+.hero-actions-row {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.hero-btn-primary {
+  background-color: var(--primary-orange);
+  color: #ffffff;
+  border: 1.5px solid var(--primary-orange);
+  border-radius: 6px;
+  padding: 10px 22px;
+  font-size: 14.5px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(255, 157, 0, 0.28);
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero-btn-primary:hover {
+  background-color: var(--primary-orange-hover);
+  border-color: var(--primary-orange-hover);
+  box-shadow: 0 6px 16px rgba(255, 157, 0, 0.4);
+  transform: translateY(-1px);
+}
+
+.hero-btn-secondary {
+  background-color: #ffffff;
+  color: #222222;
+  border: 1.5px solid #d1d5db;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 14.5px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.hero-btn-secondary:hover {
+  border-color: var(--primary-orange);
+  color: var(--primary-orange);
+  background-color: #fffaf0;
+}
+
+.hero-book-wrapper {
+  width: 100%;
+  max-width: 440px;
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.hero-book-img {
+  width: 100%;
+  height: auto;
+  max-height: 220px;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.08));
+}
+
+/* ==========================================================================
+   2. HERO REVIEWS STACK (RIGHT COLUMN)
+   ========================================================================== */
+.hero-reviews-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.hero-reviews-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: -4px;
+}
+
+.hero-reviews-badge {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.hero-add-review-link {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary-orange);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.hero-add-review-link:hover {
+  background: rgba(255, 157, 0, 0.1);
+  text-decoration: underline;
+}
+
+.hero-reviews-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.hero-review-card {
+  background: #ffffff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 16px 20px 18px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: fadeInReview 0.3s ease-out;
+}
+
+.hero-review-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border-color: #cbd5e1;
+}
+
+.review-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.review-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 800;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.review-author-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.review-author-name {
+  font-size: 15px;
+  font-weight: 800;
+  color: #111111;
+  margin-bottom: 2px;
+}
+
+.review-target-tag {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.review-stars {
+  color: #FFC000;
+  font-size: 17px;
+  letter-spacing: 2px;
+  flex-shrink: 0;
+}
+
+.review-card-body {
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: #333333;
+  margin: 0;
+}
+
+/* ==========================================================================
+   3. STATS SECTION ("Vairāk, kā")
+   ========================================================================== */
+.stats-banner-container {
+  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 38px 24px 44px;
+  margin: 50px 0;
+}
+
+.stats-banner-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.stats-banner-title {
+  font-family: 'Momo Trust Display', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: #111111;
+  margin: 0 0 32px;
+}
+
+.stats-banner-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  align-items: center;
+}
+
+.stats-banner-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stats-banner-num {
+  font-family: 'Momo Trust Display', sans-serif;
+  font-size: 34px;
+  font-weight: 800;
+  color: var(--primary-orange);
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+
+.stats-banner-label {
+  font-size: 15px;
+  font-weight: 700;
+  color: #222222;
+  max-width: 200px;
+  line-height: 1.3;
+}
+
+/* ==========================================================================
+   4. FEATURES SECTION ("Mēs jums piedāvāsim")
+   ========================================================================== */
+.hero-features-section {
+  max-width: 1200px;
+  margin: 0 auto 80px;
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+
+.features-title {
+  text-align: center;
+  font-family: 'Momo Trust Display', sans-serif;
+  font-size: 30px;
+  font-weight: 800;
+  color: #111111;
+  margin: 0 0 36px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.feature-card {
+  background: #ffffff;
+  border: 1.5px solid var(--border-light);
+  border-radius: 18px;
+  min-height: 460px;
+  padding: 32px 28px;
+  box-sizing: border-box;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.07);
+  border-color: var(--primary-orange-light);
+}
+
+.feature-card-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 12px;
+  background: #fff7ed;
+  border: 1.5px solid #fed7aa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  margin-bottom: 20px;
+}
+
+.feature-card-title {
+  font-family: 'Momo Trust Display', sans-serif;
+  font-size: 21px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 12px;
+}
+
+.feature-card-desc {
+  font-size: 14px;
+  line-height: 1.55;
+  color: #4b5563;
+  margin: 0 0 22px;
+}
+
+.feature-bullet-list {
+  list-style: none;
+  padding: 0;
+  margin: auto 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.feature-bullet-list li {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.feature-bullet-list li span.check {
+  color: var(--primary-orange);
+  font-weight: 900;
+}
+
+/* ==========================================================================
+   5. REVIEWS MODAL ("Pievieno atsauksmi")
+   ========================================================================== */
+.hero-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.hero-modal-backdrop.active {
+  display: flex;
+}
+
+.hero-modal-window {
+  background: #ffffff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 520px;
+  padding: 28px 32px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
+  box-sizing: border-box;
+  animation: modalScaleUp 0.22s ease-out;
+}
+
+.hero-modal-title {
+  text-align: center;
+  font-family: 'Momo Trust Display', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0 0 14px;
+  color: #111111;
+}
+
+.hero-modal-lead {
+  font-size: 13.5px;
+  color: #555555;
+  text-align: center;
+  margin: 0 0 20px;
+}
+
+.modal-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.modal-form-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111111;
+}
+
+.modal-form-input,
+.modal-form-select,
+.modal-form-textarea {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 13.5px;
+  box-sizing: border-box;
+}
+
+.modal-form-input:focus,
+.modal-form-select:focus,
+.modal-form-textarea:focus {
+  outline: none;
+  border-color: var(--primary-orange);
+  box-shadow: 0 0 0 2px rgba(255, 157, 0, 0.2);
+}
+
+.modal-form-textarea {
+  height: 90px;
+  resize: vertical;
+}
+
+.modal-stars-row {
+  display: flex;
+  gap: 6px;
+  margin: 4px 0 14px;
+}
+
+.modal-star-btn {
+  background: none;
+  border: none;
+  font-size: 32px;
+  line-height: 1;
+  cursor: pointer;
+  color: #d1d5db;
+  padding: 0;
+  transition: transform 0.15s, color 0.15s;
+}
+
+.modal-star-btn.filled {
+  color: #FFC000;
+}
+
+.modal-star-btn:hover {
+  transform: scale(1.15);
+}
+
+.hero-modal-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.modal-btn-cancel {
+  background-color: #ef4444;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 9px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.modal-btn-submit {
+  background-color: var(--primary-orange);
+  color: #ffffff;
+  border: 1.5px solid var(--primary-orange);
+  border-radius: 6px;
+  padding: 9px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(255, 157, 0, 0.25);
+}
+
+@keyframes fadeInReview {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes modalScaleUp {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+  .hero-main-row {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-card {
+    min-height: auto;
+  }
+
+  .stats-banner-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
