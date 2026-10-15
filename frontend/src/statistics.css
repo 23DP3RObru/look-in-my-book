@@ -1,0 +1,888 @@
+/* ==========================================================================
+   STATISTIKA / INFORMĀCIJAS PANELIS STYLES
+   ========================================================================== */
+
+:root {
+  --primary-orange: #FF9D00;
+  --primary-orange-light: #FFC97E;
+  --primary-orange-hover: #ffaa21;
+  --accent-green: #5CB82C;
+  --accent-green-dark: #48a024;
+  --accent-blue: #0099FF;
+  --accent-cyan: #00A8FF;
+  --accent-red: #ff6b6b;
+  --border-card: #b5b8c0;
+  --border-light: #e2e4e8;
+  --bg-heatmap-empty: #d9d9d9;
+  --text-dark: #111827;
+  --text-muted: #555555;
+}
+
+body.statistics-page {
+  background-color: #fcfbfa;
+  background-image: 
+    radial-gradient(circle at 5% 95%, rgba(255, 170, 50, 0.22) 0%, rgba(255, 255, 255, 0) 45%),
+    radial-gradient(circle at 95% 10%, rgba(255, 190, 80, 0.12) 0%, rgba(255, 255, 255, 0) 40%),
+    radial-gradient(circle at 50% 50%, rgba(255, 250, 240, 0.6) 0%, rgba(255, 255, 255, 0) 100%);
+  background-attachment: fixed;
+  font-family: 'Momo Trust Sans', 'Segoe UI', Tahoma, sans-serif;
+  color: var(--text-dark);
+  min-height: 100vh;
+}
+
+/* Navbar active state & profile badge */
+nav ul li a.active {
+  color: var(--primary-orange);
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(255, 157, 0, 0.35);
+}
+
+.profile-avatar-blue {
+  background: #93c5fd !important;
+  color: #1e3a8a !important;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.profile-avatar-blue:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Outer layout wrapper */
+.stats-main-container {
+  max-width: 1160px;
+  margin: 30px auto 60px;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+/* Master White Card */
+.stats-card-wrapper {
+  background: #ffffff;
+  border: 1.5px solid #d4d7de;
+  border-radius: 20px;
+  padding: 32px 36px 44px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+}
+
+.stats-page-title {
+  text-align: center;
+  font-family: 'Momo Trust Display', sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  margin: 0 0 28px;
+  color: #111111;
+  letter-spacing: -0.5px;
+}
+
+/* 2-Column Grid Layout */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.95fr;
+  gap: 22px;
+  align-items: start;
+}
+
+.stats-col-left,
+.stats-col-right {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* Inner Sections common styling */
+.stats-section-box {
+  background: #ffffff;
+  border: 1.5px solid var(--border-card);
+  border-radius: 14px;
+  padding: 20px 24px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.section-box-title {
+  text-align: center;
+  font-family: 'Momo Trust Display', 'Momo Trust Sans', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0 0 14px;
+  color: #0f172a;
+}
+
+/* ==========================================================================
+   1. "KOPĀ" SECTION
+   ========================================================================== */
+.kopa-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  text-align: center;
+  align-items: start;
+  padding: 8px 0 4px;
+}
+
+.kopa-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.kopa-label {
+  font-size: 13px;
+  font-weight: 800;
+  color: #000000;
+  margin-bottom: 12px;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kopa-value {
+  font-family: 'Momo Trust Display', sans-serif;
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--primary-orange);
+  line-height: 1;
+}
+
+.kopa-value.kopa-author {
+  font-size: 18px;
+  line-height: 1.25;
+  max-width: 125px;
+  word-break: break-word;
+}
+
+/* ==========================================================================
+   2. "MĒNEŠA KOPSAVILKUMS" SECTION (HEATMAP)
+   ========================================================================== */
+.month-header-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.month-nav-btn {
+  background: none;
+  border: 1px solid #d1d5db;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555555;
+  transition: all 0.2s;
+}
+
+.month-nav-btn:hover {
+  background: #f3f4f6;
+  color: #111111;
+  border-color: #9ca3af;
+}
+
+.month-subtitle {
+  font-size: 14px;
+  color: #555555;
+  font-weight: 500;
+}
+
+.heatmap-content-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-top: 6px;
+}
+
+.heatmap-left {
+  flex: 1;
+}
+
+.heatmap-grid-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #111111;
+  margin: 0 0 12px;
+  text-align: left;
+}
+
+.heatmap-tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 24px);
+  gap: 7px;
+}
+
+.heatmap-tile {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  background-color: var(--bg-heatmap-empty);
+  cursor: pointer;
+  transition: transform 0.15s, outline 0.15s;
+  position: relative;
+}
+
+.heatmap-tile:hover {
+  transform: scale(1.15);
+  outline: 2px solid #222;
+  z-index: 5;
+}
+
+/* Heatmap intensity levels matching user image */
+.heatmap-tile.level-0 {
+  background-color: var(--bg-heatmap-empty);
+}
+
+.heatmap-tile.level-1 {
+  background-color: #FFC97E; /* <15 lapaspuses */
+}
+
+.heatmap-tile.level-2 {
+  background-color: #FF9D00; /* 15-50 lapaspuses */
+}
+
+.heatmap-tile.level-3 {
+  background-color: #E67300; /* >50 lapaspuses */
+}
+
+/* Legend on the right side */
+.heatmap-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 26px;
+  min-width: 160px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #222222;
+  text-transform: uppercase;
+}
+
+.legend-color-box {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.legend-color-box.level-3 { background-color: #E67300; }
+.legend-color-box.level-2 { background-color: #FF9D00; }
+.legend-color-box.level-1 { background-color: #FFC97E; }
+
+.heatmap-bottom-total {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 16px;
+  font-weight: 800;
+  color: #111111;
+}
+
+.heatmap-bottom-total .total-pages-number {
+  color: var(--primary-orange);
+  font-size: 20px;
+  font-weight: 800;
+  margin-left: 4px;
+}
+
+/* ==========================================================================
+   3. "VIDĒJI" SECTION (PACE & MONTHLY CHARTS)
+   ========================================================================== */
+.average-stats-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 8px 12px;
+  background: #fbfbfc;
+  border: 1px solid #eef0f3;
+  border-radius: 8px;
+}
+
+.average-pace-badge {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #333333;
+}
+
+.average-pace-badge span {
+  color: var(--primary-orange);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.chart-tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.chart-tab-btn {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #4b5563;
+  transition: all 0.2s;
+}
+
+.chart-tab-btn.active,
+.chart-tab-btn:hover {
+  background: var(--primary-orange);
+  color: #ffffff;
+  border-color: var(--primary-orange);
+}
+
+.chart-container-wrapper {
+  position: relative;
+  width: 100%;
+  height: 220px;
+}
+
+/* ==========================================================================
+   4. "PAŠLAIK TIEK LASĪTAS" SECTION
+   ========================================================================== */
+.current-books-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.current-books-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.current-books-list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.book-card-item {
+  border: 1px solid #d4d7de;
+  border-radius: 10px;
+  padding: 12px;
+  background: #ffffff;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.book-card-main {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.book-card-cover {
+  width: 65px;
+  height: 98px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  background: #1e293b;
+}
+
+.book-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.book-card-title {
+  font-size: 18px;
+  font-weight: 800;
+  margin: 0 0 2px;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.book-card-author {
+  font-size: 13px;
+  color: #555555;
+  margin: 0 0 10px;
+}
+
+.book-card-inputs-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.book-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.book-input-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #333333;
+}
+
+.book-card-input {
+  width: 80px;
+  height: 24px;
+  padding: 2px 6px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.book-card-input:focus {
+  outline: none;
+  border-color: var(--primary-orange);
+  box-shadow: 0 0 0 2px rgba(255, 157, 0, 0.2);
+}
+
+.book-save-btn {
+  background-color: var(--accent-green);
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  height: 24px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.book-save-btn:hover {
+  background-color: var(--accent-green-dark);
+}
+
+.book-save-btn:active {
+  transform: scale(0.98);
+}
+
+/* Progress bar inside book card */
+.book-progress-wrapper {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.book-progress-track {
+  width: 100%;
+  height: 18px;
+  background-color: #f1f3f5;
+  border: 1px solid #d9d9d9;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.book-progress-fill {
+  height: 100%;
+  background: var(--accent-green);
+  border-radius: 10px;
+  transition: width 0.4s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 6px;
+  box-sizing: border-box;
+}
+
+.book-progress-label-left {
+  position: absolute;
+  left: 10px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.book-progress-label-right {
+  position: absolute;
+  right: 10px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #333333;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Book Completion Overlay (Image 2) */
+.book-completed-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(30, 30, 30, 0.82);
+  backdrop-filter: blur(2px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #ffffff;
+  padding: 16px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  z-index: 10;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.book-completed-title {
+  font-size: 17px;
+  font-weight: 800;
+  margin: 0 0 4px;
+}
+
+.book-completed-prompt {
+  font-size: 13px;
+  margin: 0 0 12px;
+  color: #e2e8f0;
+}
+
+.book-completed-review-btn {
+  background-color: var(--accent-cyan);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0, 168, 255, 0.35);
+  transition: all 0.2s;
+}
+
+.book-completed-review-btn:hover {
+  background-color: #0093e0;
+  transform: translateY(-1px);
+}
+
+.no-books-message {
+  text-align: center;
+  color: #64748b;
+  font-size: 14px;
+  padding: 24px 10px;
+}
+
+/* ==========================================================================
+   5. "SASNIEGUMI" SECTION
+   ========================================================================== */
+.achievements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 290px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.achievements-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.achievements-list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.achievement-item-card {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  border: 1px solid #d4d7de;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.achievement-icon-box {
+  width: 52px;
+  height: 52px;
+  background-color: var(--accent-blue);
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 24px;
+}
+
+.achievement-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.achievement-name {
+  font-size: 16px;
+  font-weight: 800;
+  margin: 0 0 2px;
+  color: #0f172a;
+}
+
+.achievement-desc {
+  font-size: 13px;
+  color: #444444;
+  margin: 0 0 6px;
+}
+
+.achievement-progress-track {
+  width: 100%;
+  height: 14px;
+  background-color: #f1f3f5;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.achievement-progress-fill {
+  height: 100%;
+  background: var(--accent-green);
+  border-radius: 8px;
+  transition: width 0.3s ease-out;
+}
+
+.achievement-progress-text {
+  position: absolute;
+  right: 8px;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #222222;
+  pointer-events: none;
+}
+
+.achievement-progress-fill-text {
+  position: absolute;
+  left: 8px;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   6. 5-STAR REVIEW MODAL ("NOVĒRTĒ GRĀMATU" - Image 2)
+   ========================================================================== */
+.review-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.review-modal-backdrop.active {
+  display: flex;
+}
+
+.review-modal-window {
+  background: #ffffff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 520px;
+  padding: 30px 34px 28px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
+  box-sizing: border-box;
+  animation: modalScaleUp 0.22s ease-out;
+}
+
+.review-modal-title {
+  text-align: center;
+  font-family: 'Momo Trust Display', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0 0 16px;
+  color: #111111;
+}
+
+.review-modal-lead {
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: #333333;
+  margin: 0 0 16px;
+}
+
+.review-rating-question {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111111;
+  margin: 0 0 10px;
+}
+
+.review-stars-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.review-star-btn {
+  background: none;
+  border: none;
+  font-size: 32px;
+  line-height: 1;
+  cursor: pointer;
+  color: #d1d5db;
+  padding: 0;
+  transition: transform 0.15s, color 0.15s;
+}
+
+.review-star-btn.filled,
+.review-star-btn.hovered {
+  color: #FFC000;
+}
+
+.review-star-btn:hover {
+  transform: scale(1.15);
+}
+
+.review-comment-label {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 8px;
+}
+
+.review-comment-textarea {
+  width: 100%;
+  height: 105px;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 13.5px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.review-comment-textarea:focus {
+  outline: none;
+  border-color: var(--primary-orange);
+  box-shadow: 0 0 0 2px rgba(255, 157, 0, 0.2);
+}
+
+.review-modal-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 22px;
+}
+
+.review-btn-cancel {
+  background-color: var(--accent-red);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 28px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.review-btn-cancel:hover {
+  background-color: #ef4444;
+}
+
+.review-btn-submit {
+  background-color: #ffffff;
+  color: var(--primary-orange);
+  border: 1.5px solid var(--primary-orange);
+  border-radius: 6px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(255, 157, 0, 0.15);
+  transition: all 0.2s;
+}
+
+.review-btn-submit:hover {
+  background-color: var(--primary-orange);
+  color: #ffffff;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalScaleUp {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 960px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-card-wrapper {
+    padding: 24px 20px;
+  }
+}
+
+@media (max-width: 560px) {
+  .kopa-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .heatmap-content-row {
+    flex-direction: column;
+  }
+
+  .heatmap-legend {
+    padding-top: 10px;
+  }
+
+  .review-modal-actions {
+    flex-direction: column;
+  }
+
+  .review-btn-cancel,
+  .review-btn-submit {
+    width: 100%;
+  }
+}

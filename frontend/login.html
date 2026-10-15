@@ -43,26 +43,30 @@
 
             <div id="form_message" class="form-message"></div>
 
-            <div>
-                <div>
-                    <label for="email">E-pasts</label>
-                    <input type="email" id="email" name="email" required/>
+            <div id="form_fields">
+                <div id="form_field">
+                    <label class="visually_hidden" for="email">E-pasts</label>
+                    <input type="email" id="email" name="email" placeholder="E-pasts:" required/>
                     <span class="error" id="error_email"></span>
                 </div>
 
-                <div>
-                    <label for="password">Parole</label>
-                    <input type="password" id="password" name="password" required/>
+                <div id="form_field">
+                    <label class="visually_hidden" for="password">Parole</label>
+                    <input type="password" id="password" name="password" placeholder="Parole:" required/>
                     <span class="error" id="error_password"></span>
                 </div>
 
-                <button type="button" id="cancel">Atcelt</button>
-                <button type="submit" id="submit">Pieslēgties</button>
+                <p class="registration_login">Vai jums vēl nav profila? Reģistrējieties klikšķinot <a href="registration.html">šeit!</a></p>
+                <div class="form_actions">
+                    <button type="button" id="cancel">Atcelt</button>
+                    <button type="submit" id="submit">Pieslēgties</button>
+                </div>
             </div>
         </form>
         
         <script src="src/js/front.js"></script>
         <script src="src/js/main.js"></script>
+        <script src="src/js/auth.js"></script>
         <script>
             // Clear error messages when user starts typing
             ['email', 'password'].forEach(id => {
@@ -98,30 +102,16 @@
                 if (hasError) return;
 
                 try {
-                    const response = await fetch("http://localhost:1000/api/users/login", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            email: email,
-                            password: password
-                        })
-                    });
-
-                    const data = await response.json();
+                    const data = await AuthAPI.login(email, password);
 
                     const messageDiv = document.getElementById('form_message');
                     if (data.success) {
-                        // Store user info in localStorage
-                        localStorage.setItem('user', JSON.stringify(data.user));
-                        
                         messageDiv.className = 'form-message success';
                         messageDiv.textContent = data.message;
                         messageDiv.style.display = 'block';
                         
                         // Update UI to show login indicator
-                        updateLoginIndicator();
+                        AuthAPI.updateLoginIndicator();
                         
                         // Redirect to library/dashboard after 2 seconds
                         setTimeout(() => {
@@ -142,9 +132,19 @@
             });
 
             document.getElementById("cancel").addEventListener("click", () => {
-                window.location.href = 'index.html';
+                window.location.href = 'hero.html';
             });
 
+            // Check if user is already logged in
+            function checkLoginStatus() {
+                const user = AuthAPI.getStoredUser();
+                if (user) {
+                    AuthAPI.updateLoginIndicator();
+                }
+            }
+
+            // Check login status on page load
+            checkLoginStatus();
         </script>
     </body>
 </html>

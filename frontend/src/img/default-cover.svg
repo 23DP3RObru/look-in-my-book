@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300" width="200" height="300">
+  <defs>
+    <linearGradient id="coverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2c3e50"/>
+      <stop offset="100%" stop-color="#1a252f"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="300" rx="6" fill="url(#coverGrad)"/>
+  <rect x="0" y="0" width="12" height="300" fill="#ffffff" opacity="0.08"/>
+  <circle cx="100" cy="110" r="35" fill="none" stroke="#FF9D00" stroke-width="2" stroke-dasharray="4 2"/>
+  <path d="M85 110 L100 95 L115 110 L100 125 Z" fill="#FF9D00" opacity="0.8"/>
+  <text x="100" y="175" font-family="'Segoe UI', sans-serif" font-size="16" font-weight="700" fill="#ffffff" text-anchor="middle">LOOK IN</text>
+  <text x="100" y="195" font-family="'Segoe UI', sans-serif" font-size="16" font-weight="700" fill="#FF9D00" text-anchor="middle">MY BOOK</text>
+  <line x1="60" y1="215" x2="140" y2="215" stroke="#ffffff" stroke-width="1" opacity="0.3"/>
+</svg>

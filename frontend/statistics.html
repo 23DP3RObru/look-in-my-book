@@ -1,34 +1,200 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="src/main.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Momo+Trust+Display&family=Momo+Trust+Sans:wght@200..800&display=swap" rel="stylesheet">
-    </head>
-    <body>
+<html lang="lv">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Statistika - Look in My Book</title>
+    <meta name="description" content="Tava lasīšanas statistika, pašlaik lasāmās grāmatas, temps un sasniegumi">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Momo+Trust+Display&family=Momo+Trust+Sans:wght@200..800&display=swap" rel="stylesheet">
+    
+    <!-- Base and Statistics CSS -->
+    <link rel="stylesheet" href="src/main.css">
+    <link rel="stylesheet" href="src/statistics.css">
+</head>
 
-        <nav id="nav_bar">
-            <ul id="nav_list_left">
-                <li><a href="hero.html" id="logo"><h1>LIMB</h1></a></li>
-                <li><a href="library.html">Bibliotēka</a></li>
-                <li><a href="statistics.html" class="active">Informācijas panelis</a></li>
-            </ul>
+<body class="statistics-page">
 
-            <ul id="nav_list_right">
-                <li><a href="registration.html" id="register_button">Reģistrēties</a></li>
-                <li><a href="login.html" id="login_button">Pieslēgties</a></li>
-            </ul>
-            <div id="profile" class="profile" role="img" aria-label="Profila attēls" style="display: none;">
-                <span id="profile-letter"></span>
+    <!-- Top Navigation Bar -->
+    <nav id="nav_bar">
+        <ul id="nav_list_left">
+            <li><a href="hero.html" id="logo"><h1>LIMB</h1></a></li>
+            <li><a href="library.html">Bibliotēka</a></li>
+            <li><a href="statistics.html" class="active">Informācijas panelis</a></li>
+        </ul>
+
+        <ul id="nav_list_right">
+            <li><a href="registration.html" id="register_button">Reģistrēties</a></li>
+            <li><a href="login.html" id="login_button">Pieslēgties</a></li>
+            <li id="login_indicator" style="display: none;">
+                <span id="user_greeting">Sveiki, <strong id="user_name"></strong>!</span>
+                <a href="#" id="logout_link">Izrakstīties</a>
+            </li>
+        </ul>
+
+        <div id="profile" class="profile profile-avatar-blue" role="img" aria-label="Profila attēls" style="display: flex;">
+            <span id="profile-letter">E</span>
+        </div>
+    </nav>
+
+    <!-- Main Statistics Dashboard Container -->
+    <main class="stats-main-container">
+        <div class="stats-card-wrapper">
+            <h1 class="stats-page-title">Statistika</h1>
+
+            <div class="stats-grid">
+                <!-- ================= LEFT COLUMN ================= -->
+                <div class="stats-col-left">
+
+                    <!-- 1. KOPĀ -->
+                    <section class="stats-section-box" aria-labelledby="kopa-title">
+                        <h2 id="kopa-title" class="section-box-title">Kopā</h2>
+                        <div class="kopa-grid">
+                            <div class="kopa-item">
+                                <span class="kopa-label">Lapaspuses</span>
+                                <span class="kopa-value" id="kopa-pages">2000</span>
+                            </div>
+                            <div class="kopa-item">
+                                <span class="kopa-label">Grāmatas</span>
+                                <span class="kopa-value" id="kopa-books">6</span>
+                            </div>
+                            <div class="kopa-item">
+                                <span class="kopa-label">Mīļākais autors</span>
+                                <span class="kopa-value kopa-author" id="kopa-author">Freida McFadden</span>
+                            </div>
+                            <div class="kopa-item">
+                                <span class="kopa-label">Izpildītie Sasniegumi</span>
+                                <span class="kopa-value" id="kopa-achievements">1</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 2. MĒNEŠA KOPSAVILKUMS (HEATMAP) -->
+                    <section class="stats-section-box" aria-labelledby="heatmap-title">
+                        <h2 id="heatmap-title" class="section-box-title">Mēneša kopsavilkums</h2>
+                        
+                        <div class="month-header-wrapper">
+                            <button class="month-nav-btn" id="btn-prev-month" title="Iepriekšējais mēnesis" aria-label="Iepriekšējais mēnesis">&#9664;</button>
+                            <span class="month-subtitle" id="heatmap-month-title">Septembris 2026</span>
+                            <button class="month-nav-btn" id="btn-next-month" title="Nākamais mēnesis" aria-label="Nākamais mēnesis">&#9654;</button>
+                        </div>
+
+                        <div class="heatmap-content-row">
+                            <div class="heatmap-left">
+                                <h3 class="heatmap-grid-title">Izlasīto lapaspušu skaits</h3>
+                                <div class="heatmap-tiles-grid" id="heatmap-tiles-grid">
+                                    <!-- Populated dynamically via JS -->
+                                </div>
+                            </div>
+
+                            <div class="heatmap-legend">
+                                <div class="legend-item">
+                                    <div class="legend-color-box level-3"></div>
+                                    <span>&gt;50 LAPASPUSES</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color-box level-2"></div>
+                                    <span>15-50 LAPASPUSES</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color-box level-1"></div>
+                                    <span>&lt;15 LAPASPUSES</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="heatmap-bottom-total">
+                            Kopā lapaspuses: <span class="total-pages-number" id="heatmap-month-total">230</span>
+                        </div>
+                    </section>
+
+                    <!-- 3. VIDĒJI (PACE & TRENDS) -->
+                    <section class="stats-section-box" aria-labelledby="videji-title">
+                        <h2 id="videji-title" class="section-box-title">Vidēji</h2>
+                        
+                        <div class="average-stats-header">
+                            <div class="average-pace-badge">
+                                Vidējais temps: <span id="average-pace-val">0.96</span> lapas/min (~<span id="average-min-val">1.0</span> min/lpp.)
+                            </div>
+                            <div class="chart-tabs">
+                                <button class="chart-tab-btn active" id="tab-chart-pace">📈 Lasīšanas temps</button>
+                                <button class="chart-tab-btn" id="tab-chart-pages">📊 Lapaspuses un grāmatas</button>
+                            </div>
+                        </div>
+
+                        <div class="chart-container-wrapper">
+                            <canvas id="statsChart"></canvas>
+                        </div>
+                    </section>
+
+                </div>
+
+                <!-- ================= RIGHT COLUMN ================= -->
+                <div class="stats-col-right">
+
+                    <!-- 4. PAŠLAIK TIEK LASĪTAS -->
+                    <section class="stats-section-box" aria-labelledby="reading-title">
+                        <h2 id="reading-title" class="section-box-title">Pašlaik tiek lasītas</h2>
+                        <div class="current-books-list" id="current-books-list">
+                            <!-- Book cards generated dynamically via JS -->
+                        </div>
+                    </section>
+
+                    <!-- 5. SASNIEGUMI -->
+                    <section class="stats-section-box" aria-labelledby="sasniegumi-title">
+                        <h2 id="sasniegumi-title" class="section-box-title">Sasniegumi</h2>
+                        <div class="achievements-list" id="achievements-list">
+                            <!-- Achievement cards generated dynamically via JS -->
+                        </div>
+                    </section>
+
+                </div>
             </div>
-        </nav>
+        </div>
+    </main>
 
-        <script src="src/js/main.js"></script>
-    </body>
+    <!-- ================= 5-STAR REVIEW MODAL ("Novērtē grāmatu" - Image 2) ================= -->
+    <div class="review-modal-backdrop" id="review-modal" role="dialog" aria-modal="true" aria-labelledby="review-modal-title">
+        <div class="review-modal-window">
+            <h2 id="review-modal-title" class="review-modal-title">Novērtē grāmatu</h2>
+            
+            <p class="review-modal-lead">
+                Lūdzu atstāj grāmatas novērtējumu lai palīdzētu citiem lasītājiem izvērtēt savu vēlmi to izlasīt.
+            </p>
+
+            <div class="review-rating-question">
+                Kā tu novērtētu šo grāmatu 5 zvaigžņu skalā?
+            </div>
+
+            <div class="review-stars-row" id="review-stars">
+                <button type="button" class="review-star-btn filled" data-star="1" aria-label="1 zvaigzne">&#9733;</button>
+                <button type="button" class="review-star-btn filled" data-star="2" aria-label="2 zvaigznes">&#9733;</button>
+                <button type="button" class="review-star-btn filled" data-star="3" aria-label="3 zvaigznes">&#9733;</button>
+                <button type="button" class="review-star-btn" data-star="4" aria-label="4 zvaigznes">&#9734;</button>
+                <button type="button" class="review-star-btn" data-star="5" aria-label="5 zvaigznes">&#9734;</button>
+            </div>
+
+            <label for="review-comment" class="review-comment-label">Atstāj komentāru(Nav obligāti):</label>
+            <textarea id="review-comment" class="review-comment-textarea" placeholder="Uzraksti savas domas par šo grāmatu..."></textarea>
+
+            <div class="review-modal-actions">
+                <button type="button" class="review-btn-cancel" id="btn-cancel-review">Atcelt</button>
+                <button type="button" class="review-btn-submit" id="btn-submit-review">Iesniegt atsauksmi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- App Scripts -->
+    <script src="src/js/front.js"></script>
+    <script src="src/js/main.js"></script>
+    <script src="src/js/auth.js"></script>
+    <script src="src/js/statistics.js"></script>
+</body>
 </html>

@@ -4,7 +4,10 @@ body {
 }
 
 #login_page,
-#registration_page body {
+#registration_page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     background-color: #fff;
     background-image: radial-gradient(#bbb 1px, transparent 1px);
     background-size: 20px 20px;
@@ -20,6 +23,7 @@ nav {
     box-sizing: border-box;
     padding: 0 30px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
 }
 
 nav ul {
@@ -92,11 +96,33 @@ nav ul li a.active {
     text-shadow: #FF9D00 0px 0px 10px;
 }
 
+#cancel {
+    background-color: #FF7171;
+    color: white;
+    border: 1px solid #FF3D3D;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-family: 'Momo Trust Sans', sans-serif;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#submit {
+    background-color: #ffffff;
+    color: #ff9d00;
+    border: 1px solid #FF9D00;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-family: 'Momo Trust Sans', sans-serif;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 @media (max-width: 768px) {
     nav {
         height: auto;
         position: relative;
-        padding: 16px 72px 16px 20px;
+        padding: 16px 20px;
         flex-direction: column;
         gap: 14px;
     }
@@ -135,7 +161,7 @@ nav ul li a.active {
 
 @media (max-width: 480px) {
     nav {
-        padding: 14px 64px 14px 16px;
+        padding: 14px 16px;
     }
 
     #nav_list_left,
@@ -145,13 +171,23 @@ nav ul li a.active {
 
     #register_button,
     #login_button {
-        width: 100%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         text-align: center;
-        display: inline-block;
     }
 
     nav ul li a {
         font-size: 0.9rem;
+    }
+
+    #nav_list_right {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: center;
+        width: auto;
+        gap: 10px;
     }
 }
 
@@ -214,4 +250,111 @@ form input {
     border: 1px solid #D9D9D9;
     border-radius: 4px;
     font-family: 'Momo Trust Sans', sans-serif;
+}
+
+#registration_form,
+#login_form {
+    box-sizing: border-box;
+    flex-shrink: 0;
+    width: min(336px, calc(100% - 30px));
+    gap: 8px;
+    padding: 12px 32px;
+    margin: auto;
+    border-color: #d9d9d9;
+    border-radius: 7px;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.18);
+}
+
+#registration_form h1,
+#login_form h1 {
+    margin: 8px 0 5px;
+    font-size: 20px;
+}
+
+#registration_form input:not([type="checkbox"]),
+#login_form input:not([type="checkbox"]) {
+    box-sizing: border-box;
+    width: 100%;
+    height: 25px;
+    padding: 4px 6px;
+    font-size: 12px;
+}
+
+#registration_form #form_fields,
+#login_form #form_fields {
+    gap: 10px;
+}
+
+#registration_form #form_field,
+#login_form #form_field {
+    gap: 0;
+}
+
+#registration_form #form_field + #form_field,
+#login_form #form_field + #form_field {
+    margin-top: 6px;
+}
+
+#registration_form .visually_hidden,
+#login_form .visually_hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+#registration_form .registration_terms {
+    display: grid;
+    grid-template-columns: 12px 1fr;
+    align-items: start;
+    column-gap: 3px;
+    font-family: 'Momo Trust Sans', sans-serif;
+    font-size: 9px;
+    line-height: 1.4;
+}
+
+#registration_form .registration_terms input {
+    width: 12px;
+    height: 12px;
+    margin: 1px 0 0;
+}
+
+#registration_form .registration_terms label {
+    font-size: inherit;
+    font-weight: normal;
+}
+
+#registration_form .registration_terms .error {
+    grid-column: 2;
+}
+
+#registration_form .form_actions,
+#login_form .form_actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+#registration_form .form_actions button,
+#login_form .form_actions button {
+    box-sizing: border-box;
+    flex: 1 1 105px;
+    max-width: 105px;
+    min-width: 0;
+    padding: 4px 8px;
+    font-size: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16);
+}
+
+#registration_form .registration_login,
+#login_form .registration_login {
+    margin: 0;
+    text-align: center;
+    font-family: 'Momo Trust Sans', sans-serif;
+    font-size: 9px;
 }
