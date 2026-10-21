@@ -3,185 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tavs profils</title>
+    <title>Profils - Look in My Book</title>
     <link rel="stylesheet" href="src/main.css">
+    <link rel="stylesheet" href="src/profile.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Momo+Trust+Display&family=Momo+Trust+Sans:wght@200..800&display=swap" rel="stylesheet">
-    <style>
-        #profils {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            justify-content: flex-start;
-            background: #ffffff;
-            color: #111111;
-            font-family: 'Momo Trust Sans', Arial, sans-serif;
-        }
-
-        .profile-window {
-            width: min(740px, calc(100% - 32px));
-            min-height: 460px;
-            margin: auto;
-            border: 1px solid #777777;
-            padding: 14px 34px 30px;
-            box-sizing: border-box;
-        }
-
-        .profile-title {
-            margin: 0 0 34px;
-            text-align: center;
-            font-size: 24px;
-            font-weight: 800;
-        }
-
-        .profile-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 34px 74px;
-        }
-
-        .profile-left {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .profile-picture {
-            width: 136px;
-            height: 136px;
-            margin: 0 auto 44px;
-            border-radius: 50%;
-            background: #d7d7d7;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            color: #000000;
-            font-size: 82px;
-            line-height: 1;
-            font-weight: 400;
-        }
-
-        .profile-picture img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: none;
-        }
-
-        .badge-title {
-            margin: 0 0 12px;
-            font-size: 24px;
-            font-weight: 500;
-        }
-
-        .badges {
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .badge {
-            width: 100%;
-            padding: 10px 0 12px;
-            border-bottom: 1px solid #d7d7d7;
-        }
-
-        .badge-name {
-            margin: 0 0 4px;
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .badge-description {
-            margin: 0;
-            font-size: 15px;
-            line-height: 1.35;
-            color: #444444;
-        }
-
-        .badges-empty {
-            margin: 0;
-            font-size: 15px;
-            color: #555555;
-        }
-
-        .profile-info {
-            display: flex;
-            flex-direction: column;
-            min-height: 336px;
-        }
-
-        .info-group {
-            margin-bottom: 24px;
-            font-size: 24px;
-        }
-
-        .info-label {
-            display: block;
-            font-weight: 500;
-        }
-
-        .info-value {
-            display: block;
-            overflow-wrap: anywhere;
-        }
-
-        .logout-button {
-            width: 252px;
-            margin-top: auto;
-            padding: 6px 16px;
-            border: 1px solid #777777;
-            background: #ffffff;
-            color: #111111;
-            font: inherit;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .logout-button:hover,
-        .logout-button:focus {
-            background: #f1f1f1;
-        }
-
-        @media (max-width: 640px) {
-            #profils {
-                align-items: flex-start;
-                padding: 18px 0;
-                box-sizing: border-box;
-            }
-
-            .profile-window {
-                padding: 14px 22px 26px;
-            }
-
-            .profile-content {
-                grid-template-columns: 1fr;
-                gap: 28px;
-            }
-
-            .profile-picture {
-                margin-bottom: 30px;
-            }
-
-            .profile-info {
-                min-height: 0;
-            }
-
-            .logout-button {
-                width: 100%;
-                margin-top: 10px;
-            }
-        }
-    </style>
 </head>
-<body id="profils">
+<body class="profile-page">
     <div id="navigation"></div>
     <main class="profile-window" aria-labelledby="profile-title">
         <h1 id="profile-title" class="profile-title">Tavs profils</h1>
@@ -193,24 +22,24 @@
                     <span id="profile-initial">U</span>
                 </div>
 
-                <h2 class="badge-title">Sasniegumu žetoni:</h2>
+                <h2 class="badge-title">Sasniegumi</h2>
                 <ul id="badges" class="badges" aria-label="Sasniegumu žetoni"></ul>
             </div>
 
             <div class="profile-info">
                 <div class="info-group">
                     <span class="info-label">Vārds:</span>
-                    <span id="first-name" class="info-value">Uldis</span>
+                    <span id="first-name" class="info-value">-</span>
                 </div>
 
                 <div class="info-group">
                     <span class="info-label">Uzvārds:</span>
-                    <span id="last-name" class="info-value">Uldis</span>
+                    <span id="last-name" class="info-value">-</span>
                 </div>
 
                 <div class="info-group">
                     <span class="info-label">E-pasts:</span>
-                    <span id="email" class="info-value">example@mail.com</span>
+                    <span id="email" class="info-value">-</span>
                 </div>
 
                 <button id="logout-button" class="logout-button" type="button">Izrakstīties no profila</button>
