@@ -12,7 +12,6 @@ const { seedDatabase } = require('./seed');
 const app = express();
 const PORT = process.env.PORT || 1000;
 
-app.use(express.static(path.join(__dirname, '../frontend'), { index: 'hero.html' }));
 app.use(cors({
   origin: true,
   credentials: true
@@ -31,6 +30,13 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 24
   }
 }));
+
+app.get('/statistics.html', (req, res, next) => {
+  if (!req.session.user) return res.redirect('/login.html');
+  next();
+});
+app.use(express.static(path.join(__dirname, '../frontend'), { index: 'hero.html' }));
+
 const db = new sqlite3.Database('./data/app.db');
 
 // Enable foreign key support in SQLite

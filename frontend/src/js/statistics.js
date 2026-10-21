@@ -14,47 +14,27 @@
 
   // Initialize page
   document.addEventListener('DOMContentLoaded', async () => {
-    initUser();
     setupEventListeners();
-    await loadAllData();
-  });
-
-  function getUserId() {
-    return currentUser ? currentUser.lietotajs_id : 1;
-  }
-
-  function getApiHeaders() {
-    const headers = { 'Content-Type': 'application/json' };
-    const uid = getUserId();
-    if (uid) headers['x-user-id'] = uid.toString();
-    return headers;
-  }
-
-  function initUser() {
-    const stored = localStorage.getItem('user');
-    if (stored) {
-      try {
-        currentUser = JSON.parse(stored);
-      } catch (e) {
-        console.error('Failed to parse stored user:', e);
-      }
-    }
-
-    // If no user stored, use default demo user matching screenshot ('Elīna')
-    if (!currentUser) {
-      currentUser = {
-        lietotajs_id: 1,
-        vards: 'Elīna',
-        uzvards: 'Bērziņa',
-        epasts: 'elina@limb.lv'
-      };
+    try {
+      currentUser = await window.AuthAPI.me();
+    } catch (error) {
+      window.AuthAPI.clearUser();
+      window.location.replace('login.html');
+      return;
     }
 
     updateNavbarUser();
+    const statsContainer = document.querySelector('.stats-main-container');
+    if (statsContainer) statsContainer.hidden = false;
+    await loadAllData();
+  });
+
+  function getApiHeaders() {
+    return { 'Content-Type': 'application/json' };
   }
 
   function updateNavbarUser() {
-    const name = currentUser.vards || currentUser.first_name || 'Elīna';
+    const name = currentUser.vards || currentUser.first_name || currentUser.epasts;
     const profile = document.getElementById('profile');
     const profileLetter = document.getElementById('profile-letter');
     const registerBtn = document.getElementById('register_button');

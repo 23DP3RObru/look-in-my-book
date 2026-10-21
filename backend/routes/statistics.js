@@ -1,15 +1,15 @@
 const express = require('express');
 const router = express.Router();
 
+router.use((req, res, next) => {
+  if (!req.session || !req.session.user || !req.session.user.lietotajs_id) {
+    return res.status(401).json({ success: false, error: 'Not logged in.' });
+  }
+  next();
+});
+
 function getUserId(req) {
-  if (req.session && req.session.user && req.session.user.lietotajs_id) {
-    return req.session.user.lietotajs_id;
-  }
-  if (req.headers['x-user-id']) {
-    const parsed = parseInt(req.headers['x-user-id'], 10);
-    if (!isNaN(parsed) && parsed > 0) return parsed;
-  }
-  return 1;
+  return req.session.user.lietotajs_id;
 }
 
 const MONTH_NAMES_LV = [

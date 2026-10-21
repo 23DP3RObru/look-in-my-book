@@ -59,9 +59,22 @@ function seedDatabase(db) {
     );
 
     // 5. Ensure user 1 has initial reading data if personal library needs setup
-    db.all('SELECT p.personal_id, g.nosaukums FROM personiga_gramatu_kratuve p JOIN globalas_gramatas g ON p.gramata_id = g.gramata_id WHERE p.lietotajs_id = 1', (err, userBooks) => {
-      const hasNeverLie = (userBooks || []).some(b => b.nosaukums === 'Never Lie');
-      if (!hasNeverLie || (userBooks || []).length < 7) {
+    db.all(`
+      SELECT u.lietotajs_id AS demo_user_id, p.personal_id, g.nosaukums
+      FROM lietotajs u
+      LEFT JOIN personiga_gramatu_kratuve p ON p.lietotajs_id = u.lietotajs_id
+      LEFT JOIN globalas_gramatas g ON g.gramata_id = p.gramata_id
+      WHERE u.lietotajs_id = 1
+    `, (err, userBooks) => {
+      if (err) {
+        console.error('Could not load demo user books:', err.message);
+        return;
+      }
+      if (!userBooks.length || !userBooks[0].demo_user_id) return;
+
+      const demoBooks = userBooks.filter(book => book.personal_id !== null);
+      const hasNeverLie = demoBooks.some(book => book.nosaukums === 'Never Lie');
+      if (!hasNeverLie || demoBooks.length < 7) {
         console.log('🌱 Setting up exact demo user statistics matching design mockup...');
 
         // Clear existing demo personal books and sessions for user 1 to ensure clean 1:1 match
