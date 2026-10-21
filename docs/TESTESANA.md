@@ -137,6 +137,8 @@ Testēšanas palaišana tiek veikta ar komandu:
 npm test
 ```
 
+Pēc testu izpildes testa laikā izveidotie lietotāji, grāmata un platformas atsauksme, kā arī ar testa lietotājiem saistītie ieraksti tiek dzēsti no datubāzes. Grāmatu vērtējumi tiek atjaunoti to iepriekšējā stāvoklī. Tīrīšana tiek mēģināta arī tad, ja kāds tests neizdodas; ja tīrīšana neizdodas, skripts izvada kļūdu un testu kopas rezultāts ir neveiksmīgs.
+
 **Testēšanas izpildes atskaite:**
 ```text
 ======================================================================

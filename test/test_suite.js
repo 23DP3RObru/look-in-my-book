@@ -17,6 +17,18 @@ process.env.PORT = '5055';
 const app = require('../backend/server');
 
 const BASE_URL = 'http://localhost:5055';
+const testRunId = `${Date.now()}_${process.pid}`;
+const testEmails = [
+  `test_user_${testRunId}@limb.lv`,
+  `dup_user_${testRunId}@limb.lv`,
+  `empty_fields_${testRunId}@limb.lv`,
+  `diff_pass_${testRunId}@limb.lv`,
+  `short_pass_${testRunId}@limb.lv`,
+  `auth_tester_${testRunId}@limb.lv`,
+];
+const testBookTitle = `Testa Grāmata ${testRunId}`;
+const testPlatformReviewText = `Lielisks dizains un ērta statistikas pārskatāmība! (${testRunId})`;
+const originalBookRatings = new Map();
 
 // Helper: HTTP pieprasījumu veikšanai ar sīkdatņu (session cookie) atbalstu
 function makeRequest(method, path, body = null, cookie = null) {
@@ -69,15 +81,109 @@ function test(name, fn) {
   tests.push({ name, fn });
 }
 
+function runDatabaseQuery(sql, params = []) {
+  return new Promise((resolve, reject) => {
+    app.get('db').run(sql, params, function (err) {
+      if (err) return reject(err);
+      resolve(this);
+    });
+  });
+}
+
+function getDatabaseRows(sql, params = []) {
+  return new Promise((resolve, reject) => {
+    app.get('db').all(sql, params, (err, rows) => {
+      if (err) return reject(err);
+      resolve(rows);
+    });
+  });
+}
+
+async function cleanupTestData() {
+  const db = app.get('db');
+  await runDatabaseQuery('BEGIN IMMEDIATE TRANSACTION');
+
+  try {
+    const placeholders = testEmails.map(() => '?').join(', ');
+    const users = await getDatabaseRows(
+      `SELECT lietotajs_id FROM lietotajs WHERE epasts IN (${placeholders})`,
+      testEmails
+    );
+    const userIds = users.map((user) => user.lietotajs_id);
+
+    if (userIds.length > 0) {
+      const userPlaceholders = userIds.map(() => '?').join(', ');
+      const reviews = await getDatabaseRows(
+        `SELECT DISTINCT gramata_id FROM atsauksmes_atskaites WHERE lietotajs_id IN (${userPlaceholders})`,
+        userIds
+      );
+
+      await runDatabaseQuery(
+        `DELETE FROM lietotaja_sasniegumi WHERE lietotajs_id IN (${userPlaceholders})`,
+        userIds
+      );
+      await runDatabaseQuery(
+        `DELETE FROM lasisanas_sesija WHERE lietotajs_id IN (${userPlaceholders})`,
+        userIds
+      );
+      await runDatabaseQuery(
+        `DELETE FROM atsauksmes_atskaites WHERE lietotajs_id IN (${userPlaceholders})`,
+        userIds
+      );
+      await runDatabaseQuery(
+        `DELETE FROM personiga_gramatu_kratuve WHERE lietotajs_id IN (${userPlaceholders})`,
+        userIds
+      );
+
+      for (const { gramata_id: bookId } of reviews) {
+        if (originalBookRatings.has(bookId)) {
+          await runDatabaseQuery(
+            'UPDATE globalas_gramatas SET atsauksmes_atskaites = ? WHERE gramata_id = ?',
+            [originalBookRatings.get(bookId), bookId]
+          );
+        }
+      }
+    }
+
+    await runDatabaseQuery(
+      'DELETE FROM platformas_atsauksmes WHERE teksts = ?',
+      [testPlatformReviewText]
+    );
+    await runDatabaseQuery(
+      'DELETE FROM globalas_gramatas WHERE nosaukums = ?',
+      [testBookTitle]
+    );
+    await runDatabaseQuery(
+      `DELETE FROM lietotajs WHERE epasts IN (${placeholders})`,
+      testEmails
+    );
+
+    const remaining = await getDatabaseRows(
+      `SELECT
+        (SELECT COUNT(*) FROM lietotajs WHERE epasts IN (${placeholders})) AS users,
+        (SELECT COUNT(*) FROM globalas_gramatas WHERE nosaukums = ?) AS books,
+        (SELECT COUNT(*) FROM platformas_atsauksmes WHERE teksts = ?) AS platform_reviews`,
+      [...testEmails, testBookTitle, testPlatformReviewText]
+    );
+    if (remaining[0].users || remaining[0].books || remaining[0].platform_reviews) {
+      throw new Error('Daļa testa ierakstu joprojām atrodas datubāzē.');
+    }
+
+    await runDatabaseQuery('COMMIT');
+  } catch (err) {
+    await runDatabaseQuery('ROLLBACK');
+    throw err;
+  }
+}
+
 // ============================================================================
 // 1. LIETOTĀJA REĢISTRĀCIJAS TESTI
 // ============================================================================
 test('1.1. Veiksmīga reģistrācija ar pareiziem datiem', async () => {
-  const timestamp = Date.now();
   const res = await makeRequest('POST', '/api/users/register', {
     first_name: 'Janis',
     last_name: 'Berzins',
-    email: `test_user_${timestamp}@limb.lv`,
+    email: testEmails[0],
     password: 'Password123',
     rep_password: 'Password123',
   });
@@ -87,7 +193,7 @@ test('1.1. Veiksmīga reģistrācija ar pareiziem datiem', async () => {
 });
 
 test('1.2. Reģistrācija ar jau izmantotu e-pastu (dublikāts)', async () => {
-  const dupEmail = `dup_user_${Date.now()}@limb.lv`;
+  const dupEmail = testEmails[1];
   await makeRequest('POST', '/api/users/register', {
     first_name: 'Pirmais',
     last_name: 'Lietotajs',
@@ -111,7 +217,7 @@ test('1.3. Reģistrācija ar neaizpildītiem obligātajiem laukiem', async () =>
   const res = await makeRequest('POST', '/api/users/register', {
     first_name: '',
     last_name: 'Berzins',
-    email: 'nepilns@limb.lv',
+    email: testEmails[2],
     password: 'Password123',
     rep_password: 'Password123',
   });
@@ -123,7 +229,7 @@ test('1.4. Reģistrācija ar nesakrītošām parolēm', async () => {
   const res = await makeRequest('POST', '/api/users/register', {
     first_name: 'Janis',
     last_name: 'Berzins',
-    email: `diff_pass_${Date.now()}@limb.lv`,
+    email: testEmails[3],
     password: 'Password123',
     rep_password: 'DifferentPassword456',
   });
@@ -136,7 +242,7 @@ test('1.5. Paroles garuma robežvērtība (<6 simboli)', async () => {
   const res = await makeRequest('POST', '/api/users/register', {
     first_name: 'Janis',
     last_name: 'Berzins',
-    email: `short_pass_${Date.now()}@limb.lv`,
+    email: testEmails[4],
     password: '12345',
     rep_password: '12345',
   });
@@ -148,7 +254,7 @@ test('1.5. Paroles garuma robežvērtība (<6 simboli)', async () => {
 // 2. PIESLĒGŠANĀS UN SESIJAS PĀRVALDĪBA
 // ============================================================================
 let userSessionCookie = null;
-const testEmail = `auth_tester_${Date.now()}@limb.lv`;
+const testEmail = testEmails[5];
 const testPassword = 'SecurePassword123';
 
 test('2.1. Sagatavošana - testa lietotāja reģistrēšana', async () => {
@@ -227,7 +333,7 @@ test('3.2. Grāmatu meklēšana pēc nosaukuma', async () => {
 
 test('3.3. Jaunas grāmatas pievienošana bibliotēkai ar pareiziem datiem', async () => {
   const newBook = {
-    nosaukums: `Testa Grāmata ${Date.now()}`,
+    nosaukums: testBookTitle,
     autors: 'Valdis Grāmatnieks',
     lapas_kopa: 250,
     zanrs: 'Zinātniskā fantastika',
@@ -371,6 +477,7 @@ test('6.3. Sasniegumu saraksta un progresa pārbaude (/api/statistics/achievemen
 test('7.1. Atsauksmes iesniegšana par grāmatu (5 zvaigznes)', async () => {
   const currentBooks = await makeRequest('GET', '/api/reading/current', null, userSessionCookie);
   const book = currentBooks.body.books[0];
+  originalBookRatings.set(book.gramata_id, book.atsauksmes_atskaites);
 
   const res = await makeRequest('POST', '/api/reading/review', {
     gramata_id: book.gramata_id,
@@ -401,7 +508,7 @@ test('7.3. Atsauksmes pievienošana par platformu sākumlapai (/api/reviews)', a
     autora_vards: 'Arturs Krumins',
     tips: 'sistema',
     vertejums: 5,
-    teksts: 'Lielisks dizains un ērta statistikas pārskatāmība!',
+    teksts: testPlatformReviewText,
   }, userSessionCookie);
 
   assert.strictEqual(res.status, 201);
@@ -455,6 +562,14 @@ async function runTests() {
       console.error(`  -> Kļūdas apraksts: ${err.message}`);
       failed++;
     }
+  }
+
+  try {
+    await cleanupTestData();
+    console.log('Testa dati no datubāzes ir notīrīti.');
+  } catch (err) {
+    console.error(`Neizdevās notīrīt testa datus: ${err.message}`);
+    failed++;
   }
 
   const duration = ((Date.now() - startTime) / 1000).toFixed(2);
