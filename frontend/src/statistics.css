@@ -91,6 +91,7 @@ nav ul li a.active {
   display: flex;
   flex-direction: column;
   gap: 22px;
+  min-width: 0;
 }
 
 /* Inner Sections common styling */
@@ -355,6 +356,10 @@ nav ul li a.active {
   position: relative;
   width: 100%;
   height: 220px;
+}
+
+.chart-container-wrapper canvas {
+  max-width: 100%;
 }
 
 /* ==========================================================================
@@ -855,7 +860,7 @@ nav ul li a.active {
 /* Responsive adjustments */
 @media (max-width: 960px) {
   .stats-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .stats-card-wrapper {
