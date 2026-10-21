@@ -16,6 +16,13 @@
   document.addEventListener('DOMContentLoaded', async () => {
     setupEventListeners();
     try {
+      if (window.navigationReady) await window.navigationReady;
+    } catch (error) {
+      console.error('Unable to load navigation:', error);
+      return;
+    }
+
+    try {
       currentUser = await window.AuthAPI.me();
     } catch (error) {
       window.AuthAPI.clearUser();
@@ -42,9 +49,7 @@
 
     if (profile && profileLetter) {
       profile.style.display = 'flex';
-      profile.className = 'profile profile-avatar-blue';
       profileLetter.textContent = Array.from(name)[0].toUpperCase();
-      profile.onclick = () => window.location.href = 'profile.html';
     }
 
     if (registerBtn) registerBtn.style.display = 'none';

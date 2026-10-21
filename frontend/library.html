@@ -58,19 +58,7 @@
   </style>
 </head>
 <body>
-  <nav id="nav_bar">
-    <ul id="nav_list_left">
-      <li><a href="hero.html" id="logo"><h1>LIMB</h1></a></li>
-      <li><a href="library.html" class="active">Bibliotēka</a></li>
-      <li><a href="statistics.html">Informācijas panelis</a></li>
-    </ul>
-    <ul id="nav_list_right">
-      <li><a href="registration.html" id="register_button">Reģistrēties</a></li>
-      <li><a href="login.html" id="login_button">Pieslēgties</a></li>
-      <li id="login_indicator" style="display:none"><span>Sveiki, <strong id="user_name"></strong>!</span><a href="#" id="logout_link">Izrakstīties</a></li>
-    </ul>
-    <div id="profile" class="profile" role="img" aria-label="Profila attēls" style="display:none"><span id="profile-letter"></span></div>
-  </nav>
+  <div id="navigation"></div>
   <main class="library">
     <section class="library-top" aria-label="Grāmatu meklēšana un filtri">
       <h1 class="library-title">Bibliotēka</h1>
@@ -95,6 +83,7 @@
     </section>
   </div>
   <div class="toast" id="toast" role="status"></div>
+  <script src="src/js/navigation.js"></script>
   <script src="src/js/main.js"></script>
   <script>
     const API = '/api/books';

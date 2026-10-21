@@ -12,8 +12,9 @@
         #profils {
             min-height: 100vh;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: flex-start;
             background: #ffffff;
             color: #111111;
             font-family: 'Momo Trust Sans', Arial, sans-serif;
@@ -22,6 +23,7 @@
         .profile-window {
             width: min(740px, calc(100% - 32px));
             min-height: 460px;
+            margin: auto;
             border: 1px solid #777777;
             padding: 14px 34px 30px;
             box-sizing: border-box;
@@ -180,6 +182,7 @@
     </style>
 </head>
 <body id="profils">
+    <div id="navigation"></div>
     <main class="profile-window" aria-labelledby="profile-title">
         <h1 id="profile-title" class="profile-title">Tavs profils</h1>
 
@@ -215,6 +218,8 @@
         </section>
     </main>
 
+    <script src="src/js/navigation.js"></script>
+    <script src="src/js/main.js"></script>
     <script>
         function renderProfile(user) {
             const firstName = user?.vards || '';
@@ -278,6 +283,7 @@
                 }
 
                 localStorage.setItem('user', JSON.stringify(data.user));
+                updateLoginIndicator();
                 renderProfile(data.user);
                 renderBadges(data.achievements || []);
             } catch (error) {

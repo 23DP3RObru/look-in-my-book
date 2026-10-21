@@ -32,17 +32,31 @@ function updateLoginIndicator() {
     if (profileLetter && name) profileLetter.textContent = Array.from(name)[0].toLocaleUpperCase();
 }
 
-updateLoginIndicator();
+async function initializeNavigation() {
+    try {
+        if (window.navigationReady) await window.navigationReady;
 
-const logoutLink = document.getElementById('logout_link');
-if (logoutLink) {
-    logoutLink.addEventListener('click', (event) => {
-        event.preventDefault();
-        localStorage.removeItem('user');
-        fetch('http://localhost:1000/api/users/logout', { method: 'POST' })
-            .catch((error) => console.error('Unable to log out from the server:', error))
-            .finally(() => {
-                window.location.href = 'hero.html';
+        updateLoginIndicator();
+
+        const logoutLink = document.getElementById('logout_link');
+        if (logoutLink) {
+            logoutLink.addEventListener('click', (event) => {
+                event.preventDefault();
+                localStorage.removeItem('user');
+                fetch('http://localhost:1000/api/users/logout', { method: 'POST' })
+                    .catch((error) => console.error('Unable to log out from the server:', error))
+                    .finally(() => {
+                        window.location.href = 'hero.html';
+                    });
             });
-    });
+        }
+    } catch (error) {
+        console.error('Unable to initialize navigation:', error);
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeNavigation);
+} else {
+    initializeNavigation();
 }
