@@ -1,17 +1,19 @@
 {
-  "name": "sqlite-web-template",
+  "name": "look-in-my-book",
   "version": "1.0.0",
-  "description": "SQLite database web template with CRUD API",
+  "description": "Look in My Book - Grāmatu uzskaites un lasīšanas statistikas platforma",
   "main": "backend/server.js",
   "scripts": {
-    "start": "node backend/server.js"
+    "start": "node backend/server.js",
+    "test": "node test/test_suite.js",
+    "build:docx": "node scripts/generate_docx.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
+    "docx": "^9.13.0",
     "express": "^4.21.0",
     "express-session": "^1.17.3",
     "sqlite3": "^6.0.1"
   }
 }
-
