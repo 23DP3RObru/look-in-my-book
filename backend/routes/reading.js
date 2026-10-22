@@ -93,7 +93,16 @@ router.post('/log', (req, res) => {
 
     const currentPages = book.lapaspuses_izlasitas || 0;
     const maxPages = book.lapas_kopa || 999999;
-    const newPages = Math.min(maxPages, currentPages + pagesRead);
+    const remainingPages = Math.max(0, maxPages - currentPages);
+
+    if (book.lapas_kopa > 0 && pagesRead > remainingPages) {
+      return res.status(400).json({
+        success: false,
+        error: `Nevar pievienot vairāk par atlikušajām ${remainingPages} lapaspusēm.`
+      });
+    }
+
+    const newPages = currentPages + pagesRead;
     const isCompleted = newPages >= maxPages;
 
     // 1. Record reading session

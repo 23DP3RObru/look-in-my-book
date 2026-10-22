@@ -424,7 +424,26 @@ test('5.3. Progresa reģistrēšana - lapu un laika pieskaitīšana (/api/readin
   assert.ok(res.body.updatedBook.lapaspuses_izlasitas >= 20);
 });
 
-test('5.4. Progresa reģistrēšana ar nederīgām lapaspusēm (0 vai negatīvs)', async () => {
+test('5.4. Nevar pārsniegt grāmatas kopējo lapaspušu skaitu', async () => {
+  const currentBooks = await makeRequest('GET', '/api/reading/current', null, userSessionCookie);
+  const book = currentBooks.body.books[0];
+  const remainingPages = Math.max(0, book.lapas_kopa - book.lapaspuses_izlasitas);
+
+  const res = await makeRequest('POST', '/api/reading/log', {
+    gramata_id: book.gramata_id,
+    pages_read: remainingPages + 1,
+    reading_time_minutes: 10,
+  }, userSessionCookie);
+
+  assert.strictEqual(res.status, 400, 'Pārsniedzot grāmatas lapu skaitu, jāatgriež 400');
+  assert.strictEqual(res.body.success, false);
+
+  const updatedBooks = await makeRequest('GET', '/api/reading/current', null, userSessionCookie);
+  const unchangedBook = updatedBooks.body.books.find((currentBook) => currentBook.gramata_id === book.gramata_id);
+  assert.strictEqual(unchangedBook.lapaspuses_izlasitas, book.lapaspuses_izlasitas);
+});
+
+test('5.5. Progresa reģistrēšana ar nederīgām lapaspusēm (0 vai negatīvs)', async () => {
   const currentBooks = await makeRequest('GET', '/api/reading/current', null, userSessionCookie);
   const book = currentBooks.body.books[0];
 

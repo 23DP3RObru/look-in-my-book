@@ -304,6 +304,12 @@
     card.id = `book-card-${book.gramata_id}`;
 
     const percent = book.progress_percent || 0;
+    const totalPages = Number(book.lapas_kopa) || 0;
+    let pagesRead = Number(book.lapaspuses_izlasitas) || 0;
+    const remainingPages = Math.max(0, totalPages - pagesRead);
+    const pageCountLabel = totalPages > 0
+      ? `${pagesRead} / ${totalPages} lpp. izlasītas`
+      : `${pagesRead} lpp. izlasītas`;
     const coverUrl = book.bilde_url || 'src/img/default-cover.svg';
 
     card.innerHTML = `
@@ -312,10 +318,11 @@
         <div class="book-card-info">
           <h3 class="book-card-title">${book.nosaukums}</h3>
           <div class="book-card-author">${book.autors}</div>
+          <div class="book-page-count">${pageCountLabel}</div>
           <div class="book-card-inputs-row">
             <div class="book-input-group">
               <label class="book-input-label">Lapaspušu skaits izlasīts:</label>
-              <input type="number" min="1" class="book-card-input input-pages" placeholder="19">
+              <input type="number" min="1" ${totalPages > 0 ? `max="${remainingPages}"` : ''} class="book-card-input input-pages" placeholder="19" ${remainingPages === 0 && totalPages > 0 ? 'disabled' : ''}>
             </div>
             <div class="book-input-group">
               <label class="book-input-label">Laiks min.(Neobligāts):</label>
@@ -348,9 +355,15 @@
 
       const pages = parseInt(pagesInput.value || pagesInput.placeholder, 10);
       const time = parseInt(timeInput.value || timeInput.placeholder, 10) || 0;
+      const pagesRemaining = Math.max(0, totalPages - pagesRead);
 
       if (isNaN(pages) || pages <= 0) {
         alert('Lūdzu ievadiet izlasīto lapaspušu skaitu!');
+        return;
+      }
+
+      if (totalPages > 0 && pages > pagesRemaining) {
+        alert(`Nevar pievienot vairāk par atlikušajām ${pagesRemaining} lapaspusēm.`);
         return;
       }
 
@@ -379,6 +392,16 @@
           const newPercent = result.updatedBook.progress_percent;
           card.querySelector('.book-progress-fill').style.width = `${newPercent}%`;
           card.querySelector('.book-progress-label-right').textContent = `${newPercent}%`;
+          const updatedPages = result.updatedBook.lapaspuses_izlasitas;
+          const updatedRemaining = Math.max(0, totalPages - updatedPages);
+          pagesRead = updatedPages;
+          card.querySelector('.book-page-count').textContent = totalPages > 0
+            ? `${updatedPages} / ${totalPages} lpp. izlasītas`
+            : `${updatedPages} lpp. izlasītas`;
+          if (totalPages > 0) {
+            pagesInput.max = updatedRemaining;
+            pagesInput.disabled = updatedRemaining === 0;
+          }
 
           // If reached 100%, show overlay!
           if (result.completed) {
