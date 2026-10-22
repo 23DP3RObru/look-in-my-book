@@ -11,6 +11,11 @@ function updateLoginIndicator() {
         }
     }
 
+    const adminNavItem = document.getElementById('admin_nav_item');
+    if (adminNavItem) {
+        adminNavItem.style.display = (user && user.loma === 'admin') ? 'inline-block' : 'none';
+    }
+
     if (!user) return;
 
     const registerButton = document.getElementById('register_button');
@@ -30,6 +35,25 @@ function updateLoginIndicator() {
         profile.setAttribute('aria-label', `Profila attēls: ${name}`);
     }
     if (profileLetter && name) profileLetter.textContent = Array.from(name)[0].toLocaleUpperCase();
+
+    // Verify session in background to sync latest role/status
+    fetch('/api/users/me')
+        .then(res => res.json())
+        .then(data => {
+            if (data.success && data.user) {
+                localStorage.setItem('user', JSON.stringify(data.user));
+                if (adminNavItem) {
+                    adminNavItem.style.display = (data.user.loma === 'admin') ? 'inline-block' : 'none';
+                }
+            } else if (!data.success) {
+                localStorage.removeItem('user');
+                if (adminNavItem) adminNavItem.style.display = 'none';
+                if (profile) profile.style.display = 'none';
+                if (registerButton) registerButton.style.display = '';
+                if (loginButton) loginButton.style.display = '';
+            }
+        })
+        .catch(() => {});
 }
 
 async function initializeNavigation() {
@@ -43,7 +67,7 @@ async function initializeNavigation() {
             logoutLink.addEventListener('click', (event) => {
                 event.preventDefault();
                 localStorage.removeItem('user');
-                fetch('http://localhost:1000/api/users/logout', { method: 'POST' })
+                fetch('/api/users/logout', { method: 'POST' })
                     .catch((error) => console.error('Unable to log out from the server:', error))
                     .finally(() => {
                         window.location.href = 'hero.html';

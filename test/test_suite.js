@@ -25,6 +25,7 @@ const testEmails = [
   `diff_pass_${testRunId}@limb.lv`,
   `short_pass_${testRunId}@limb.lv`,
   `auth_tester_${testRunId}@limb.lv`,
+  `admin_target_${testRunId}@limb.lv`,
 ];
 const testBookTitle = `Testa Grāmata ${testRunId}`;
 const testPlatformReviewText = `Lielisks dizains un ērta statistikas pārskatāmība! (${testRunId})`;
@@ -537,6 +538,155 @@ test('8.1. Iziešana no profila un sesijas izbeigšana (/api/users/logout)', asy
   // Pārbauda, ka pēc iziešanas me pieprasījums atgriež 401
   const checkRes = await makeRequest('GET', '/api/users/me', null, userSessionCookie);
   assert.strictEqual(checkRes.status, 401, 'Pēc izrakstīšanās sesija ir neaktīva');
+});
+
+
+// ============================================================================
+// 9. ADMINISTRATORA FUNKCIONALITĀTE UN PIEKĻUVES KONTROLE
+// ============================================================================
+let adminSessionCookie = null;
+let targetUserId = null;
+const adminTargetEmail = `admin_target_${testRunId}@limb.lv`;
+
+test('9.1. Piekļuves kontrole: neautorizētam apmeklētājam liegta piekļuve (/api/admin/stats)', async () => {
+  const res = await makeRequest('GET', '/api/admin/stats');
+  assert.strictEqual(res.status, 401, 'Neautorizētam jāatgriež 401');
+  assert.strictEqual(res.body.success, false);
+});
+
+test('9.2. Piekļuves kontrole: parastam lietotājam liegta administratora piekļuve (/api/admin/users)', async () => {
+  // Pārbauda ar parasta lietotāja sesiju (pirms tam autorizēts parastais lietotājs)
+  // Pieslēdzamies ar testa parasto lietotāju
+  const userLogin = await makeRequest('POST', '/api/users/login', {
+    email: testEmails[0],
+    password: 'Password123',
+  });
+  const normalUserCookie = userLogin.cookie;
+
+  const res = await makeRequest('GET', '/api/admin/users', null, normalUserCookie);
+  assert.strictEqual(res.status, 403, 'Parastam lietotājam jāatgriež 403 Forbidden');
+  assert.strictEqual(res.body.success, false);
+});
+
+test('9.3. Administratora autorizācija ar ģenerētajiem datiem (admin@limb.lv)', async () => {
+  const res = await makeRequest('POST', '/api/users/login', {
+    email: 'admin@limb.lv',
+    password: 'Admin123!',
+  });
+  assert.strictEqual(res.status, 200);
+  assert.strictEqual(res.body.success, true);
+  assert.strictEqual(res.body.user.loma, 'admin');
+  adminSessionCookie = res.cookie;
+  assert.ok(adminSessionCookie, 'Administratoram jāsaņem sesijas sīkfails');
+});
+
+test('9.4. Administratora kopsavilkuma statistikas iegūšana (/api/admin/stats)', async () => {
+  const res = await makeRequest('GET', '/api/admin/stats', null, adminSessionCookie);
+  assert.strictEqual(res.status, 200);
+  assert.strictEqual(res.body.success, true);
+  assert.ok('total_users' in res.body.stats);
+  assert.ok('total_books' in res.body.stats);
+  assert.ok('total_reviews' in res.body.stats);
+});
+
+test('9.5. Klientu profilu saraksta pārskatīšana (/api/admin/users)', async () => {
+  // Vispirms izveidojam testa lietotāju moderēšanas pārbaudei
+  const regRes = await makeRequest('POST', '/api/users/register', {
+    first_name: 'Moderejamais',
+    last_name: 'Klients',
+    email: adminTargetEmail,
+    password: 'Password123!',
+    rep_password: 'Password123!',
+  });
+  assert.strictEqual(regRes.status, 201);
+  targetUserId = regRes.body.lietotajs_id;
+
+  const res = await makeRequest('GET', '/api/admin/users', null, adminSessionCookie);
+  assert.strictEqual(res.status, 200);
+  assert.strictEqual(res.body.success, true);
+  assert.ok(Array.isArray(res.body.users));
+  const found = res.body.users.find((u) => u.lietotajs_id === targetUserId);
+  assert.ok(found, 'Jaunizveidotajam klientam jāparādās administratora sarakstā');
+});
+
+test('9.6. Klienta profila bloķēšana (/api/admin/users/:id/block)', async () => {
+  const res = await makeRequest('PUT', `/api/admin/users/${targetUserId}/block`, {
+    statuss: 'blokets',
+  }, adminSessionCookie);
+  assert.strictEqual(res.status, 200);
+  assert.strictEqual(res.body.success, true);
+  assert.strictEqual(res.body.statuss, 'blokets');
+});
+
+test('9.7. Bloķēta klienta autorizācijas liegums (/api/users/login)', async () => {
+  const res = await makeRequest('POST', '/api/users/login', {
+    email: adminTargetEmail,
+    password: 'Password123!',
+  });
+  assert.strictEqual(res.status, 403, 'Bloķētam lietotājam jāatgriež 403');
+  assert.strictEqual(res.body.success, false);
+  assert.ok(res.body.error.includes('bloķēts'), 'Kļūdai jāsatur norāde par bloķēšanu');
+});
+
+test('9.8. Klienta profila atbloķēšana (/api/admin/users/:id/block)', async () => {
+  const res = await makeRequest('PUT', `/api/admin/users/${targetUserId}/block`, {
+    statuss: 'aktivs',
+  }, adminSessionCookie);
+  assert.strictEqual(res.status, 200);
+  assert.strictEqual(res.body.success, true);
+  assert.strictEqual(res.body.statuss, 'aktivs');
+
+  // Pārliecinās, ka pēc atbloķēšanas var atkal ielogoties
+  const loginRes = await makeRequest('POST', '/api/users/login', {
+    email: adminTargetEmail,
+    password: 'Password123!',
+  });
+  assert.strictEqual(loginRes.status, 200);
+});
+
+test('9.9. Klientu atsauksmju pārvaldība un dzēšana (/api/admin/reviews)', async () => {
+  const reviewsRes = await makeRequest('GET', '/api/admin/reviews', null, adminSessionCookie);
+  assert.strictEqual(reviewsRes.status, 200);
+  assert.strictEqual(reviewsRes.body.success, true);
+  assert.ok(Array.isArray(reviewsRes.body.book_reviews));
+  assert.ok(Array.isArray(reviewsRes.body.platform_reviews));
+
+  // Izveido pagaidu platformas atsauksmi un administrators to dzēš
+  const addRes = await makeRequest('POST', '/api/reviews', {
+    autora_vards: 'Pagaidu Atsauksme',
+    tips: 'sistema',
+    vertejums: 1,
+    teksts: `Dzēšams teksts ${testRunId}`,
+  });
+  const createdId = addRes.body.review.atsauksme_id;
+
+  const delRes = await makeRequest('DELETE', `/api/admin/reviews/platform/${createdId}`, null, adminSessionCookie);
+  assert.strictEqual(delRes.status, 200);
+  assert.strictEqual(delRes.body.success, true);
+});
+
+test('9.10. Robežgadījums: administrators nevar bloķēt vai dzēst pats savu kontu', async () => {
+  const meRes = await makeRequest('GET', '/api/users/me', null, adminSessionCookie);
+  const myId = meRes.body.user.lietotajs_id;
+
+  const blockSelfRes = await makeRequest('PUT', `/api/admin/users/${myId}/block`, { statuss: 'blokets' }, adminSessionCookie);
+  assert.strictEqual(blockSelfRes.status, 400, 'Adminam jāliedz sevi bloķēt');
+
+  const deleteSelfRes = await makeRequest('DELETE', `/api/admin/users/${myId}`, null, adminSessionCookie);
+  assert.strictEqual(deleteSelfRes.status, 400, 'Adminam jāliedz sevi dzēst');
+});
+
+test('9.11. Klienta profila neatgriezeniska dzēšana (/api/admin/users/:id)', async () => {
+  const delRes = await makeRequest('DELETE', `/api/admin/users/${targetUserId}`, null, adminSessionCookie);
+  assert.strictEqual(delRes.status, 200);
+  assert.strictEqual(delRes.body.success, true);
+
+  // Pārliecinās, ka dzēstais lietotājs vairs nevar autorizēties
+  const loginRes = await makeRequest('POST', '/api/users/login', {
+    email: adminTargetEmail,
+    password: 'Password123!',
+  });
+  assert.strictEqual(loginRes.status, 401, 'Dzēsts lietotājs vairs neeksistē');
 });
 
 // ============================================================================

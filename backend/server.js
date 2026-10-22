@@ -7,6 +7,7 @@ const usersRouter = require('./routes/users');
 const statisticsRouter = require('./routes/statistics');
 const readingRouter = require('./routes/reading');
 const reviewsRouter = require('./routes/reviews');
+const adminRouter = require('./routes/admin');
 const { seedDatabase } = require('./seed');
 
 const app = express();
@@ -30,6 +31,12 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 24
   }
 }));
+
+app.get('/admin.html', (req, res, next) => {
+  if (!req.session.user) return res.redirect('/login.html');
+  if (req.session.user.loma !== 'admin') return res.redirect('/hero.html');
+  next();
+});
 
 app.get('/statistics.html', (req, res, next) => {
   if (!req.session.user) return res.redirect('/login.html');
@@ -56,6 +63,7 @@ function initDatabase() {
         epasts        TEXT NOT NULL UNIQUE,
         parole_hash   TEXT NOT NULL,
         loma          TEXT CHECK(loma IN ('user', 'admin')) DEFAULT 'user',
+        statuss       TEXT CHECK(statuss IN ('aktivs', 'blokets')) DEFAULT 'aktivs',
         izveidots_at  DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `);
@@ -184,6 +192,8 @@ app.use('/api/users', usersRouter);
 app.use('/api/statistics', statisticsRouter);
 app.use('/api/reading', readingRouter);
 app.use('/api/reviews', reviewsRouter);
+app.use('/api/admin', adminRouter);
+
 
 /* ──────────────────────────────────────────────
    REST API ENDPOINTS (GLOBALAS_GRAMATAS)

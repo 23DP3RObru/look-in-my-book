@@ -12,7 +12,8 @@ function toSessionUser(user) {
     vards: user.vards,
     uzvards: user.uzvards,
     epasts: user.epasts,
-    loma: user.loma || 'user'
+    loma: user.loma || 'user',
+    statuss: user.statuss || 'aktivs'
   };
 }
 
@@ -81,7 +82,7 @@ router.post('/login', (req, res, next) => {
   }
 
   // Find user by email
-  db.get('SELECT lietotajs_id, vards, uzvards, epasts, parole_hash, loma FROM lietotajs WHERE epasts = ?', [email], (err, user) => {
+  db.get('SELECT lietotajs_id, vards, uzvards, epasts, parole_hash, loma, COALESCE(statuss, "aktivs") AS statuss FROM lietotajs WHERE epasts = ?', [email], (err, user) => {
     if (err) {
       return res.status(500).json({ success: false, error: 'Database error.' });
     }
@@ -98,6 +99,13 @@ router.post('/login', (req, res, next) => {
 
       if (!isMatch) {
         return res.status(401).json({ success: false, error: 'Invalid email or password.' });
+      }
+
+      if (user.statuss === 'blokets') {
+        return res.status(403).json({
+          success: false,
+          error: 'Šis konts ir bloķēts. Lūdzu, sazinieties ar administratoru.'
+        });
       }
 
       const sessionUser = toSessionUser(user);
@@ -131,7 +139,7 @@ router.get('/me', (req, res) => {
   const userId = req.session.user.lietotajs_id;
 
   db.get(
-    'SELECT lietotajs_id, vards, uzvards, epasts, loma FROM lietotajs WHERE lietotajs_id = ?',
+    'SELECT lietotajs_id, vards, uzvards, epasts, loma, COALESCE(statuss, "aktivs") AS statuss FROM lietotajs WHERE lietotajs_id = ?',
     [userId],
     (err, user) => {
       if (err) {

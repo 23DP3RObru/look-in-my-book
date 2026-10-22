@@ -32,6 +32,10 @@
         }
         if (registerBtn) registerBtn.style.display = 'none';
         if (loginBtn) loginBtn.style.display = 'none';
+        const adminItem = document.getElementById('admin_nav_item');
+        if (adminItem) {
+          adminItem.style.display = (user.loma === 'admin') ? 'inline-block' : 'none';
+        }
       } catch (e) {
         console.error(e);
       }

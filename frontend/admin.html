@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrēšanas panelis | Look in My Book</title>
+    <link rel="stylesheet" href="src/main.css">
+    <link rel="stylesheet" href="src/admin.css">
+    <script src="src/js/navigation.js" defer></script>
+    <script src="src/js/main.js" defer></script>
+    <script src="src/js/admin.js" defer></script>
+</head>
+<body class="admin-page">
+    <div id="navigation"></div>
+
+    <main class="admin-container">
+        <!-- Top header -->
+        <header class="admin-header">
+            <div>
+                <h1>
+                    <span>🛡️ Administrēšanas panelis</span>
+                    <span class="admin-badge">Administrators</span>
+                </h1>
+                <p style="margin: 6px 0 0; color: #6b7280; font-size: 14px;">
+                    Klientu profilu pārvaldība un atsauksmju moderēšana.
+                </p>
+            </div>
+        </header>
+
+        <!-- Quick Statistics Summary -->
+        <section class="admin-stats-grid" aria-label="Sistēmas kopsavilkums">
+            <div class="admin-stat-card">
+                <div class="stat-card-title">👥 Lietotāji kopā</div>
+                <div class="stat-card-value" id="stat-total-users">-</div>
+                <div class="stat-card-desc">Reģistrēti lietotāju konti</div>
+            </div>
+            <div class="admin-stat-card">
+                <div class="stat-card-title">🚫 Bloķēti profili</div>
+                <div class="stat-card-value" id="stat-blocked-users" style="color: #dc2626;">-</div>
+                <div class="stat-card-desc">Liegta piekļuve platformai</div>
+            </div>
+            <div class="admin-stat-card">
+                <div class="stat-card-title">📚 Grāmatas bibliotēkā</div>
+                <div class="stat-card-value" id="stat-total-books">-</div>
+                <div class="stat-card-desc">Publiskā kataloga vienības</div>
+            </div>
+            <div class="admin-stat-card">
+                <div class="stat-card-title">💬 Atsauksmes kopā</div>
+                <div class="stat-card-value" id="stat-total-reviews" style="color: #f59e0b;">-</div>
+                <div class="stat-card-desc">Grāmatu un sistēmas atsauksmes</div>
+            </div>
+        </section>
+
+        <!-- Tab Navigation -->
+        <nav class="admin-tabs" aria-label="Administrēšanas sadaļas">
+            <button class="admin-tab-btn active" data-target="tab-users">👤 Klientu profili</button>
+            <button class="admin-tab-btn" data-target="tab-reviews">💬 Klientu atsauksmes</button>
+        </nav>
+
+        <!-- Tab 1: Klientu profili -->
+        <section id="tab-users" class="tab-content active">
+            <div class="admin-card">
+                <div class="section-toolbar">
+                    <h2>Klientu profilu pārvaldība</h2>
+                    <div class="toolbar-controls">
+                        <input
+                            type="text"
+                            id="user-search"
+                            class="search-input"
+                            placeholder="Meklēt pēc vārda vai e-pasta..."
+                            aria-label="Meklēt lietotāju"
+                        >
+                        <select id="user-status-filter" class="select-filter" aria-label="Filtrēt pēc statusa">
+                            <option value="all">Visi statusi</option>
+                            <option value="aktivs">Aktīvi</option>
+                            <option value="blokets">Bloķēti</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px;">ID</th>
+                                <th>Vārds, Uzvārds</th>
+                                <th>E-pasts</th>
+                                <th>Loma</th>
+                                <th>Statuss</th>
+                                <th>Reģistrēts</th>
+                                <th style="width: 160px;">Darbības</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 24px; color: #9ca3af;">
+                                    Ielādē datus...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab 2: Klientu atsauksmes -->
+        <section id="tab-reviews" class="tab-content">
+            <div class="admin-card">
+                <div class="section-toolbar">
+                    <h2>Klientu atsauksmju moderēšana</h2>
+                    <div class="toolbar-controls">
+                        <input
+                            type="text"
+                            id="review-search"
+                            class="search-input"
+                            placeholder="Meklēt atsauksmē vai autorā..."
+                            aria-label="Meklēt atsauksmi"
+                        >
+                        <select id="review-type-filter" class="select-filter" aria-label="Filtrēt pēc tipa">
+                            <option value="all">Visas atsauksmes</option>
+                            <option value="gramata">Tikai grāmatām</option>
+                            <option value="sistema">Tikai platformai</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px;">ID</th>
+                                <th>Tips / Objekts</th>
+                                <th>Autors</th>
+                                <th>Vērtējums</th>
+                                <th>Atsauksmes teksts</th>
+                                <th>Datums</th>
+                                <th style="width: 90px;">Darbība</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reviews-table-body">
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 24px; color: #9ca3af;">
+                                    Ielādē datus...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Action Confirmation Modal Dialog -->
+    <div id="admin-confirm-modal" class="admin-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="admin-modal">
+            <div class="admin-modal-header">
+                <h3 id="modal-title" class="admin-modal-title">Apstiprinājums</h3>
+                <button type="button" id="modal-close-btn" class="admin-modal-close" aria-label="Aizvērt">✕</button>
+            </div>
+            <div class="admin-modal-body">
+                <p id="modal-body-text" style="margin: 0;"></p>
+            </div>
+            <div class="admin-modal-footer">
+                <button type="button" id="modal-cancel-btn" class="btn-secondary">Atcelt</button>
+                <button type="button" id="modal-confirm-btn" class="btn-danger">Apstiprināt</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

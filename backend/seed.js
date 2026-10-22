@@ -1,10 +1,39 @@
+const bcrypt = require('bcrypt');
+
 /**
  * Seed data for Look in My Book
- * Ensures tables, columns, sample books, achievements, and realistic user statistics.
+ * Ensures tables, columns, sample books, achievements, realistic user statistics,
+ * website content, and the default administration account.
  */
 
 function seedDatabase(db) {
   db.serialize(() => {
+    // 0. Ensure statuss column exists in lietotajs
+    db.run(`ALTER TABLE lietotajs ADD COLUMN statuss TEXT DEFAULT 'aktivs'`, (err) => {
+      // Ignore if column already exists
+    });
+
+    // 0.2 Seed default admin account if not present
+    const adminEmail = 'admin@limb.lv';
+    db.get('SELECT lietotajs_id, epasts, loma FROM lietotajs WHERE epasts = ?', [adminEmail], (err, row) => {
+      if (!row) {
+        bcrypt.hash('Admin123!', 10, (hErr, hash) => {
+          if (!hErr && hash) {
+            db.run(`
+              INSERT INTO lietotajs (vards, uzvards, epasts, parole_hash, loma, statuss)
+              VALUES ('Administrators', 'Sistēmas', ?, ?, 'admin', 'aktivs')
+            `, [adminEmail, hash], (insErr) => {
+              if (!insErr) {
+                console.log('👑 Default administrator account created (admin@limb.lv / Admin123!)');
+              }
+            });
+          }
+        });
+      } else if (row.loma !== 'admin') {
+        db.run(`UPDATE lietotajs SET loma = 'admin', statuss = 'aktivs' WHERE lietotajs_id = ?`, [row.lietotajs_id]);
+      }
+    });
+
     // 1. Add bilde_url column to globalas_gramatas if not exists
     db.run(`ALTER TABLE globalas_gramatas ADD COLUMN bilde_url TEXT`, (err) => {
       // Ignore if column already exists
